@@ -67,6 +67,26 @@ The final document must preserve this section order:
 20. `risks`
 21. `next-steps`
 
+## Output Standards
+
+- Keep the structure predictable and presentation-ready.
+- Prefer tables for epics, stories, dependencies, and estimates when they improve readability.
+- Keep story points consistent across the document.
+- Make dependencies explicit and traceable.
+- Keep BDD and Gherkin aligned to the described story behavior.
+- Make the document read like a delivery artifact, not a rough draft.
+
+## Quality Check
+
+Before finalizing, verify that:
+
+- every epic has stories
+- every story has a point estimate
+- every story has tasks
+- dependencies are listed where relevant
+- BDD and Gherkin cover the primary flows and edge cases
+- the document is polished and review-ready
+
 ## Guardrails
 
 - Do not proceed past intake without the three sizing inputs if they are missing.

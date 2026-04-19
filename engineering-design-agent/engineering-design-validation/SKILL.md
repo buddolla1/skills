@@ -29,6 +29,7 @@ Provide the validation layer of the delivery plan with BDD, Gherkin, estimates, 
 3. Assign estimate points where requested.
 4. Define a test strategy that matches the delivery risk.
 5. List representative test data.
+6. Include acceptance criteria and test data notes for each story when useful.
 
 ## Output Standard
 
@@ -36,9 +37,19 @@ For validation, provide:
 
 - BDD
 - Gherkin scenarios
+- Acceptance criteria
 - Estimate points
 - Test strategy
 - Test data
+
+## Quality Check
+
+Before handing off, verify that:
+
+- BDD and Gherkin cover the primary flows and edge cases
+- every story has a point estimate when estimates are requested
+- test data notes align with the story behavior
+- the validation layer supports the delivery plan clearly
 
 ## Guardrails
 

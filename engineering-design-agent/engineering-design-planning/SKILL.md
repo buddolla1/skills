@@ -25,9 +25,10 @@ Create the delivery structure with epics, stories, and dependency mapping.
 ## Step-by-Step Workflows
 
 1. Break the feature into logical epics.
-2. Expand each epic into story breakdowns.
+2. Expand each epic into user stories with title, description, dependencies, story points, and tasks.
 3. Identify upstream and downstream dependencies.
 4. Produce a dependency matrix that makes sequencing obvious.
+5. Keep the story point scale consistent across the plan.
 
 ## Output Standard
 
@@ -39,6 +40,16 @@ For planning, provide:
 - Dependency matrix
 - Story list
 
+## Quality Check
+
+Before handing off, verify that:
+
+- every epic has stories
+- every story has a point estimate
+- every story has tasks
+- dependencies are listed where relevant
+- the story list is complete and traceable
+
 ## Guardrails
 
 - Do not add BDD or testing content here.
@@ -49,6 +60,7 @@ For planning, provide:
 
 - Be structured and specific.
 - Keep the planning sequence easy to review.
+- Prefer tables for epics, stories, dependencies, and estimates when they improve clarity.
 
 ## References
 
