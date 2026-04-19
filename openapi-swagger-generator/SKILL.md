@@ -63,6 +63,10 @@ For each issue, provide:
 - Recommended documentation or code fix
 - Validation note if the spec must be regenerated
 
+## Output Location
+
+- Write generated API documentation artifacts to the repository `doc/` folder unless the user explicitly requests a different path.
+
 ## Reporting Style
 
 - Be explicit about whether the source of truth is code, annotations, or a static spec.

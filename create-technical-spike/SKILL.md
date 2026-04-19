@@ -45,6 +45,11 @@ For each spike, provide:
 - Recommendation
 - Follow-up action
 
+## Output Location
+
+- Write generated spike documents to the repository `doc/` folder unless the user explicitly requests a different path.
+- Create `doc/` first if it does not exist.
+
 ## Reporting Style
 
 - Be time-boxed and decision-oriented.
@@ -61,4 +66,3 @@ For each spike, provide:
 
 - Related specifications and ADRs
 - Existing architecture notes
-

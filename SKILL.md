@@ -24,12 +24,17 @@ Use this skill when you need a single entry point to discover the available skil
 3. If the request spans multiple domains, combine the relevant skills in sequence.
 4. If no skill clearly fits, ask a clarifying question before acting.
 5. Prefer the narrowest skill that solves the problem without overreaching.
+6. If the selected skill is a coordinator, follow its first-question prompt and route to the narrower subskills it references.
 
 ## Skill Catalog
 
 ### Code Quality & Standards
 
-- [java-code-quality-analyzer](java-code-quality-analyzer/SKILL.md): Detects code smells, long methods, duplicate logic, and maintainability risks in Java.
+- [java-code-quality-analyzer](java-code-quality-analyzer/SKILL.md): Coordinates Java code reviews into focused correctness, security, performance, and design skills.
+- [java-code-quality-correctness](java-code-quality-analyzer/java-code-quality-correctness/SKILL.md): Reviews Java code for correctness bugs, edge cases, and unsafe assumptions.
+- [java-code-quality-security](java-code-quality-analyzer/java-code-quality-security/SKILL.md): Reviews Java code for security risks, secrets exposure, and unsafe data handling.
+- [java-code-quality-performance](java-code-quality-analyzer/java-code-quality-performance/SKILL.md): Reviews Java code for performance bottlenecks and hot-path inefficiency.
+- [java-code-quality-design](java-code-quality-analyzer/java-code-quality-design/SKILL.md): Reviews Java code for maintainability, cohesion, naming, and refactoring opportunities.
 - [secrets-management-checker](secrets-management-checker/SKILL.md): Flags hardcoded secrets and recommends Vault or environment-based secret handling.
 - [java-docs](java-docs/SKILL.md): Documents Java types with Javadoc best practices.
 - [sql-code-review](sql-code-review/SKILL.md): Reviews SQL for security, maintainability, and code quality issues.
@@ -70,10 +75,24 @@ Use this skill when you need a single entry point to discover the available skil
 
 ### Architecture & Documentation
 
-- [architecture-doc-generator](architecture-doc-generator/SKILL.md): Generates README files, architecture docs, and ADRs.
+- [architecture-doc-generator](architecture-doc-generator/SKILL.md): Coordinates README, architecture documentation, and ADR creation into focused skills.
+- [architecture-doc-architecture](architecture-doc-generator/architecture-doc-architecture/SKILL.md): Generates architecture documentation for Java or Spring systems.
+- [architecture-doc-adr](architecture-doc-generator/architecture-doc-adr/SKILL.md): Creates ADRs for Java or Spring systems.
 - [create-readme](create-readme/SKILL.md): Creates or updates project README files.
 - [create-specification](create-specification/SKILL.md): Creates implementation-ready specification files.
 - [create-technical-spike](create-technical-spike/SKILL.md): Creates time-boxed technical spike documents.
+- [engineering-design-agent](engineering-design-agent/SKILL.md): Generates enterprise delivery plans from feature requirements with epics, stories, dependencies, BDD, Gherkin, estimates, architecture, and diagrams.
+- [engineering-design-intake](engineering-design-agent/engineering-design-intake/SKILL.md): Collects feature sizing inputs before delivery planning begins.
+- [engineering-design-scope](engineering-design-agent/engineering-design-scope/SKILL.md): Captures the feature summary, assumptions, and scope boundaries.
+- [engineering-design-planning](engineering-design-agent/engineering-design-planning/SKILL.md): Builds epics, stories, dependencies, and dependency matrices.
+- [engineering-design-validation](engineering-design-agent/engineering-design-validation/SKILL.md): Produces BDD, Gherkin, estimates, test strategy, and test data.
+- [engineering-design-architecture](engineering-design-agent/engineering-design-architecture/SKILL.md): Finalizes the architecture overview, HLD, LLD, diagrams, risks, and next steps.
+- [fullstack-project-architecture-analyzer](fullstack-project-architecture-analyzer/SKILL.md): Coordinates architecture analysis into HLD, LLD, External APIs, or a full architecture document.
+- [fullstack-architecture-intake](fullstack-project-architecture-analyzer/fullstack-architecture-intake/SKILL.md): Asks what the user wants to create first: HLD, LLD, External APIs, or full doc.
+- [fullstack-architecture-hld](fullstack-project-architecture-analyzer/fullstack-architecture-hld/SKILL.md): Generates high-level design content.
+- [fullstack-architecture-lld](fullstack-project-architecture-analyzer/fullstack-architecture-lld/SKILL.md): Generates low-level design content.
+- [fullstack-architecture-external-apis](fullstack-project-architecture-analyzer/fullstack-architecture-external-apis/SKILL.md): Documents external APIs and integrations.
+- [fullstack-architecture-full-doc](fullstack-project-architecture-analyzer/fullstack-architecture-full-doc/SKILL.md): Generates the complete architecture document.
 - [acquire-codebase-knowledge](acquire-codebase-knowledge/SKILL.md): Maps a codebase before making changes.
 
 ### React Accessibility
@@ -92,6 +111,7 @@ Use this skill when you need a single entry point to discover the available skil
 - Do not use a broader skill when a narrower one matches the task better.
 - Do not invent behavior that is not covered by the selected skill.
 - Do not skip clarification when the request could reasonably map to multiple skills.
+- Do not bypass coordinator skills when they explicitly split the work into smaller phases.
 
 ## Troubleshooting
 

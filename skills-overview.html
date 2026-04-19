@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skills Overview</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --bg: #f4f1eb;
+      --surface: #fffaf3;
+      --surface-2: #f0e7da;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --accent: #0f766e;
+      --accent-2: #134e4a;
+      --border: rgba(31, 41, 55, 0.12);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.10), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.08), transparent 28%),
+        var(--bg);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      padding: 16px 24px;
+      background: rgba(244, 241, 235, 0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .button:hover { filter: brightness(1.04); }
+
+    .deck {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 56px;
+    }
+
+    .hero {
+      padding: 44px 44px 36px;
+      background: linear-gradient(145deg, rgba(255, 250, 243, 0.96), rgba(255, 250, 243, 0.82));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font: 600 12px/1.2 Arial, sans-serif;
+      color: var(--accent);
+      margin: 0 0 14px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      line-height: 0.98;
+      margin: 0 0 18px;
+      max-width: 11ch;
+    }
+
+    .lead {
+      font: 400 1.08rem/1.7 Arial, sans-serif;
+      color: var(--muted);
+      max-width: 68ch;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: rgba(255, 250, 243, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-5 { grid-column: span 5; }
+    .span-12 { grid-column: 1 / -1; }
+
+    h2 {
+      margin: 0 0 16px;
+      font: 700 1.3rem/1.2 Arial, sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    p, li, td, th {
+      font: 400 1rem/1.65 Arial, sans-serif;
+    }
+
+    p { margin: 0; }
+
+    .muted { color: var(--muted); }
+
+    ul, ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li + li { margin-top: 8px; }
+
+    .flow {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--surface-2);
+      border-radius: 16px;
+    }
+
+    .badge {
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      color: white;
+      font: 700 0.9rem/1 Arial, sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-2);
+      background: rgba(15, 118, 110, 0.06);
+    }
+
+    code {
+      background: rgba(15, 118, 110, 0.10);
+      padding: 0.15em 0.4em;
+      border-radius: 6px;
+      font-size: 0.95em;
+    }
+
+    pre {
+      margin: 0;
+      padding: 20px;
+      border-radius: 20px;
+      overflow: auto;
+      background: #1f2937;
+      color: #f8fafc;
+      font: 500 0.92rem/1.6 "SFMono-Regular", Consolas, monospace;
+    }
+
+    .example {
+      display: grid;
+      gap: 18px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .callout {
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent);
+      background: rgba(15, 118, 110, 0.08);
+      border-radius: 16px;
+    }
+
+    .footer {
+      padding: 14px 4px 0;
+      color: var(--muted);
+      font: 400 0.92rem/1.5 Arial, sans-serif;
+    }
+
+    @media (max-width: 900px) {
+      .span-6, .span-7, .span-5 { grid-column: 1 / -1; }
+      .split { grid-template-columns: 1fr; }
+      .hero { padding: 28px 24px; }
+      .card { padding: 22px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .toolbar { display: none; }
+      .deck { max-width: none; padding: 0; }
+      .hero, .card { box-shadow: none; }
+      .card, .hero { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button class="button" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <main id="presentation" class="deck">
+    <section class="hero">
+      <p class="eyebrow">Agent Skills</p>
+      <h1>Skills Overview</h1>
+      <p class="lead">A presentation-ready summary of Agent Skills, how they work, why they matter, and how they are structured for reusable AI workflows.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card span-7">
+        <h2>Executive Summary</h2>
+        <p class="muted">Agent Skills are a portable, open format for adding specialized capabilities, workflows, and reference material to AI agents on demand.</p>
+        <p style="margin-top:14px" class="muted">Each skill is a self-contained directory centered on <code>SKILL.md</code>. The file defines the skill's purpose, when it should activate, and how the agent should execute it.</p>
+      </article>
+
+      <article class="card span-5">
+        <h2>Skill Structure</h2>
+        <pre>skill-name/
+├── SKILL.md
+├── scripts/
+├── references/
+├── assets/
+└── ...</pre>
+      </article>
+
+      <article class="card span-6">
+        <h2>How Skills Work</h2>
+        <div class="flow">
+          <div class="step"><div class="badge">1</div><div><strong>Discovery</strong><br><span class="muted">The agent loads only the skill name and description.</span></div></div>
+          <div class="step"><div class="badge">2</div><div><strong>Activation</strong><br><span class="muted">When the task matches, the agent loads the full <code>SKILL.md</code>.</span></div></div>
+          <div class="step"><div class="badge">3</div><div><strong>Execution</strong><br><span class="muted">The agent follows the instructions and loads supporting files only when needed.</span></div></div>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <h2>Why Skills Matter</h2>
+        <ul class="muted">
+          <li>Clear intent for both humans and agents</li>
+          <li>Better reuse across many tasks and agents</li>
+          <li>Portable files that are easy to version and share</li>
+          <li>Extensible delivery through code, examples, and references</li>
+          <li>Consistent execution for complex workflows</li>
+        </ul>
+      </article>
+
+      <article class="card span-12">
+        <h2>How To Use Skills</h2>
+        <div class="split">
+          <div class="callout">
+            <strong>Start with relevance</strong><br>
+            <span class="muted">Use the skill name and description to confirm it matches the task.</span>
+          </div>
+          <div class="callout">
+            <strong>Load on demand</strong><br>
+            <span class="muted">Open the full <code>SKILL.md</code> and supporting files only when the workflow requires them.</span>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:14px">When a skill provides scripts or templates, reuse them instead of rebuilding the process manually.</p>
+      </article>
+
+      <article class="card span-12">
+        <h2>Skills vs Custom Instructions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Agent Skills</th>
+              <th>Custom Instructions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Purpose</td>
+              <td>Specialized capabilities and workflows</td>
+              <td>Standards, conventions, and guidelines</td>
+            </tr>
+            <tr>
+              <td>Content</td>
+              <td>Instructions, scripts, examples, resources</td>
+              <td>Instructions only</td>
+            </tr>
+            <tr>
+              <td>Scope</td>
+              <td>Task-specific and loaded on demand</td>
+              <td>Usually always applied</td>
+            </tr>
+            <tr>
+              <td>Portability</td>
+              <td>Open standard across compatible agents</td>
+              <td>More tool-specific</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="margin-top:14px">Use skills for reusable capabilities. Use custom instructions for project rules, coding conventions, and review preferences.</p>
+      </article>
+
+      <article class="card span-12">
+        <h2>VS Code Considerations</h2>
+        <div class="split">
+          <div class="callout">
+            <strong>Discovery paths</strong><br>
+            <span class="muted">VS Code can discover skills in project and personal locations such as <code>.github/skills/</code>, <code>.claude/skills/</code>, and <code>.agents/skills/</code>, plus matching user-level paths.</span>
+          </div>
+          <div class="callout">
+            <strong>Invocation</strong><br>
+            <span class="muted">Skills can surface as slash commands in chat. Frontmatter options like <code>user-invocable</code> and <code>disable-model-invocation</code> control whether a skill is visible in the menu or loaded automatically.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card span-7">
+        <h2>Specification Highlights</h2>
+        <p class="muted">A skill is a directory containing <code>SKILL.md</code>, with optional <code>scripts/</code>, <code>references/</code>, and <code>assets/</code> folders.</p>
+        <div class="split" style="margin-top:16px">
+          <div class="callout">
+            <strong>Frontmatter</strong><br>
+            <span class="muted"><code>name</code>, <code>description</code>, optional <code>license</code>, <code>compatibility</code>, <code>metadata</code>, and <code>allowed-tools</code>.</span>
+          </div>
+          <div class="callout">
+            <strong>Principles</strong><br>
+            <span class="muted">Keep the main file concise, load resources on demand, and validate the skill before publishing.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card span-5">
+        <h2>Examples</h2>
+        <p><strong>Valid names</strong></p>
+        <p class="muted"><code>pdf-processing</code>, <code>data-analysis</code>, <code>code-review</code></p>
+        <p style="margin-top:14px"><strong>Invalid names</strong></p>
+        <p class="muted"><code>PDF-Processing</code>, <code>-pdf</code>, <code>pdf--processing</code></p>
+        <p style="margin-top:14px"><strong>Good description</strong></p>
+        <p class="muted">Extracts text and tables from PDF files, fills PDF forms, and merges multiple PDFs. Use when working with PDF documents or when the user mentions PDFs, forms, or document extraction.</p>
+        <p style="margin-top:14px"><strong>Poor description</strong></p>
+        <p class="muted">Helps with PDFs.</p>
+      </article>
+
+      <article class="card span-6">
+        <h2>Using Scripts</h2>
+        <p class="muted">Skills can use one-off commands directly in <code>SKILL.md</code> or bundle reusable logic in a <code>scripts/</code> directory.</p>
+        <div class="split" style="margin-top:16px">
+          <div class="callout">
+            <strong>One-off commands</strong><br>
+            <span class="muted">Use existing tools when they already solve the job well, such as package runners or language CLIs.</span>
+          </div>
+          <div class="callout">
+            <strong>Bundled scripts</strong><br>
+            <span class="muted">Use reusable scripts when the workflow is complex enough to benefit from tested logic and predictable behavior.</span>
+          </div>
+        </div>
+        <ul class="muted" style="margin-top:14px">
+          <li>Keep scripts self-contained or document dependencies clearly</li>
+          <li>Avoid interactive prompts</li>
+          <li>Provide concise <code>--help</code> output</li>
+          <li>Prefer structured output such as JSON or CSV</li>
+          <li>Separate diagnostics to stderr and data to stdout</li>
+        </ul>
+      </article>
+
+      <article class="card span-6">
+        <h2>Assets Examples</h2>
+        <p class="muted">The <code>assets/</code> directory is for static resources such as templates, diagrams, images, lookup tables, and schemas.</p>
+        <div class="split" style="margin-top:16px">
+          <div class="callout">
+            <strong>Valid</strong><br>
+            <span class="muted"><code>assets/report-template.md</code><br><code>assets/architecture-diagram.png</code><br><code>assets/field-map.json</code></span>
+          </div>
+          <div class="callout">
+            <strong>Invalid</strong><br>
+            <span class="muted"><code>assets/scripts/extract.py</code><br><code>assets/references/spec.md</code><br><code>assets/README.txt</code> when used as reference text</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <h2>References</h2>
+        <p class="muted">The <code>references/</code> directory stores supporting documentation, rules, or checklists that the agent reads when it needs deeper guidance.</p>
+      </article>
+
+      <article class="card span-6">
+        <h2>Repository Context</h2>
+        <p class="muted">This repository’s top-level <code>SKILL.md</code> is the index for available skills. Each folder contains a specialized skill for areas such as documentation, testing, Java, Spring Boot, React, SQL, and validation.</p>
+        <div class="callout" style="margin-top:16px">
+          <strong>Takeaway</strong><br>
+          <span class="muted">Skills package expertise into a reusable format and keep agent context efficient through progressive disclosure.</span>
+        </div>
+      </article>
+
+      <article class="card span-12">
+        <h2>Key Takeaways</h2>
+        <ul class="muted">
+          <li>Skills package expertise into a reusable format.</li>
+          <li>Progressive disclosure keeps agent context efficient.</li>
+          <li><code>SKILL.md</code> is the core contract for each skill.</li>
+          <li>Scripts, references, and assets extend the skill without cluttering the main instructions.</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="footer">Sources: Agent Skills documentation and specification.</div>
+  </main>
+
+  <script>
+    async function downloadPDF() {
+      const element = document.getElementById('presentation');
+      const options = {
+        margin: 0.35,
+        filename: 'skills-overview.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
+
+      if (window.html2pdf) {
+        window.html2pdf().set(options).from(element).save();
+        return;
+      }
+
+      window.print();
+    }
+  </script>
+</body>
+</html>

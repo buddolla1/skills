@@ -1,89 +1,48 @@
 ---
 name: architecture-doc-generator
-description: Generate README files, architecture documentation, and ADRs. Use when documenting Java or Spring systems, explaining service boundaries, design decisions, dependencies, deployment flow, or system behavior for engineers and stakeholders.
+description: Coordinates README, architecture documentation, and ADR creation into smaller skills. Use when documenting Java or Spring systems and you want progressive loading for README, architecture docs, ADRs, or a full documentation set.
 ---
 
 # Architecture Doc Generator
 
+Use this skill as the coordinator for durable technical documentation.
+
 ## When to Use This Skill
 
-Use this skill when creating durable technical documentation for a system or significant change.
+Use this skill when the user asks for documentation, architecture analysis, design decisions, or a complete document set for a Java or Spring system.
 
-## Prerequisites
+## First Question
 
-- The intended audience for the document
-- The source of truth from code, config, or deployment artifacts
-- Any existing docs or diagrams that should be updated instead of duplicated
+Ask the user what they want to create first:
 
-## Goal
+- README
+- Architecture doc
+- ADR
+- Full doc
 
-Produce documentation that reflects the real system, the actual design decisions, and the tradeoffs behind them.
+If the request does not specify one of these, ask this question before proceeding.
 
-## What to Generate
+## Progressive Loading Model
 
-- README content for setup, usage, and local development
-- Architecture docs for system context, components, flows, and dependencies
-- ADRs for decisions, alternatives, consequences, and status
+1. Load `create-readme/SKILL.md` when the user wants a README.
+2. Load [architecture-doc-architecture](architecture-doc-architecture/SKILL.md) when the user wants an architecture document.
+3. Load [architecture-doc-adr](architecture-doc-adr/SKILL.md) when the user wants an ADR.
+4. For a full doc, load the relevant smaller skills in sequence based on the requested document set.
 
-## Step-by-Step Workflows
+## Source of Truth
 
-1. Identify the intended audience and the decision being documented.
-2. Gather the source of truth from code, configs, deployment, and existing docs.
-3. Capture the current architecture before describing the desired state.
-4. Distill decisions, constraints, and tradeoffs into concise artifacts.
-5. Keep the document actionable, accurate, and easy to update.
-
-## README Guidance
-
-- Explain what the system does and how to run it.
-- Include prerequisites, configuration, and common workflows.
-- Keep setup steps concrete and current.
-- Avoid architecture jargon unless it helps the reader operate the project.
-
-## Architecture Doc Guidance
-
-- Describe context, components, interfaces, and data flow.
-- Show dependencies, runtime boundaries, and operational concerns.
-- Explain why the system is structured the way it is.
-- Include diagrams or structured sections when they improve clarity.
-
-## ADR Guidance
-
-- State the decision clearly and in the present tense.
-- Record alternatives considered and the reason for the chosen option.
-- Capture consequences, risks, and follow-up work.
-- Keep the scope to a single meaningful decision.
+- Prefer real source files over generated or build output.
+- Inspect code, config, deployment artifacts, and existing docs.
+- Do not invent architecture or decisions that are not supported by the repository.
 
 ## Guardrails
 
-- Do not write aspirational architecture as if it were implemented.
-- Do not copy code comments or commit messages into documentation.
+- Do not generate the full doc until the user explicitly asks for it.
+- Do not mix README, architecture, and ADR content unless the user asked for a combined document.
 - Do not bury decisions in long narrative text.
-- Prefer concise, maintainable docs over exhaustive prose.
-
-## Output Standard
-
-For each document, provide:
-
-- Document type
-- Audience
-- Source of truth used
-- Key content sections
-- Any open assumptions or update points
-
-## Reporting Style
-
-- Be factual and specific about what exists.
-- Prefer decision records over vague design descriptions.
-- Keep docs easy to scan, maintain, and compare over time.
-
-## Troubleshooting
-
-- If the document describes future intent, verify whether it is actually implemented.
-- If the source of truth is missing, collect it before drafting.
-- If the doc is getting long, split it into a README, architecture view, and ADR.
+- Do not duplicate existing docs without checking whether they should be updated instead.
 
 ## References
 
-- Existing repository docs and diagrams
-- Related ADRs and design notes
+- The source code and configuration of the project
+- The specialized documentation skills in this directory

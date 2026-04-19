@@ -30,7 +30,7 @@ Use this skill when building read models that return only the data a caller need
 
 ## Step-by-Step Workflows
 
-1. Ask whether the user wants a JPA project or a JDBC project if that choice is not already specified.
+1. Ask the user whether they want a JPA project or a JDBC project before generating the projection guidance if that choice is not already specified.
 2. Identify the fields the caller actually needs.
 3. Choose the narrowest projection shape that satisfies the use case.
 4. Keep the projection aligned with the query and repository method.

@@ -45,6 +45,11 @@ For each spec, provide:
 - Acceptance criteria
 - Out of scope items
 
+## Output Location
+
+- Write generated specification documents to the repository `doc/` folder unless the user explicitly requests a different path.
+- Create `doc/` first if it does not exist.
+
 ## Reporting Style
 
 - Be precise and testable.
@@ -61,4 +66,3 @@ For each spec, provide:
 
 - Related architecture docs and ADRs
 - Existing product or feature requirements
-
