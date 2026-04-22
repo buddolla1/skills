@@ -1,0 +1,49 @@
+{
+  "name": "gradle-buildAnalyzer-helper",
+  "model": "gpt-4.1",
+  "description": "Analyze Gradle build scripts for correctness, efficiency, and modern Gradle DSL best practices",
+  "tags": [
+    "gradle",
+    "build",
+    "dependencies",
+    "performance",
+    "caching",
+    "parallel-builds",
+    "gradle-kotlin-dsl",
+    "gradle-groovy-dsl",
+    "lint"
+  ],
+  "tools": ["codebase", "terminal"],
+  "systemPrompt": "You are a senior Gradle expert. Analyze build.gradle or build.gradle.kts scripts and suggest improvements.",
+  "prompt": "Analyze staged or selected Gradle build files. Detect unused dependencies, redundant tasks, and suggest modern Gradle DSL improvements.",
+  "skills": [
+    "Detect unused dependencies",
+    "Detect redundant tasks",
+    "Recommend modern Gradle DSL usage",
+    "Suggest parallel builds and caching",
+    "Optimize dependency resolution",
+    "Improve build performance"
+  ],
+  "predefinedPrompts": [
+    "Analyze build.gradle for unused dependencies",
+    "Suggest Gradle performance improvements",
+    "Review Gradle tasks for redundancy",
+    "Recommend modern Gradle DSL practices"
+  ],
+  "userInteraction": {
+    "enabled": true,
+    "triggerPattern": "@gradle-buildAnalyzer-helper",
+    "questions": [
+      {
+        "id": "analysisType",
+        "question": "What would you like me to analyze?",
+        "type": "choice",
+        "options": [
+          { "value": "dependencies", "label": "Dependencies Analysis" },
+          { "value": "performance", "label": "Build Performance" },
+          { "value": "tasks", "label": "Tasks Optimization" }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "logging-monitoring-helper",
+  "model": "gpt-4.1",
+  "version": "1.0",
+  "description": "Analyze logging and observability in Spring Boot applications. Suggest SLF4J/Logback best practices, structured logging, and monitoring improvements",
+
+  "tags": [
+    "logging",
+    "observability",
+    "monitoring",
+    "slf4j",
+    "logback",
+    "structured-logging",
+    "micrometer",
+    "metrics",
+    "spring-boot"
+  ],
+
+  "tools": ["codebase", "terminal"],
+
+  "systemPrompt": "You are a senior Spring Boot observability engineer. Analyze logging, monitoring, and metrics setup. Recommend improvements for structured logging, correlation, and observability best practices.",
+
+  "prompt": "Analyze staged or selected Java and Spring Boot files. Evaluate logging practices, log levels, exception logging, correlation IDs, and monitoring setup. Suggest improvements for logging and observability.",
+
+  "skills": [
+    "Evaluate SLF4J/Logback configuration",
+    "Detect improper log levels and logging gaps",
+    "Identify missing correlation IDs (MDC)",
+    "Suggest structured JSON logging",
+    "Improve exception logging practices",
+    "Recommend Micrometer metrics instrumentation",
+    "Suggest tracing and distributed logging improvements",
+    "Detect noisy or excessive logging"
+  ],
+
+  "metadata": {
+    "category": "observability",
+    "compatible_with": ["VS Code Copilot", "JetBrains Copilot"],
+    "output_preview": true
+  },
+
+  "predefinedPrompts": [
+    "Review logging for SLF4J/Logback best practices",
+    "Suggest structured logging improvements",
+    "Improve exception logging and correlation",
+    "Recommend Micrometer metrics instrumentation",
+    "Analyze logging noise and optimize log levels"
+  ],
+
+  "userInteraction": {
+    "enabled": true,
+    "mode": "guided-questions",
+    "triggerPattern": "@logging-monitoring-helper",
+    "questions": [
+      {
+        "id": "focusArea",
+        "question": "What would you like to analyze?",
+        "type": "choice",
+        "options": [
+          { "value": "logging", "label": "Logging Best Practices" },
+          { "value": "metrics", "label": "Metrics / Micrometer" },
+          { "value": "tracing", "label": "Tracing & Correlation" },
+          { "value": "all", "label": "Full Observability Review" }
+        ],
+        "default": "all"
+      }
+    ]
+  }
+}

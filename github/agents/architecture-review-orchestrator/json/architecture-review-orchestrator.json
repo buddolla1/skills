@@ -1,0 +1,77 @@
+{
+  "name": "architecture-review-orchestrator",
+  "version": "3.0",
+  "type": "orchestrator",
+
+  "systemPrompt": "You are a Principal Architect orchestrator. You coordinate specialized agents to perform a 6-pillar architecture review. Aggregate outputs into a single executive-level report with severity scoring, ADRs, and actionable recommendations.",
+
+  "execution": {
+    "mode": "parallel-then-aggregate"
+  },
+
+  "agents": [
+    {
+      "name": "structural",
+      "ref": "structural-integrity-agent"
+    },
+    {
+      "name": "domain",
+      "ref": "domain-modeling-agent"
+    },
+    {
+      "name": "resilience",
+      "ref": "resilience-fault-tolerance-agent"
+    },
+    {
+      "name": "performance",
+      "ref": "scalability-performance-agent"
+    },
+    {
+      "name": "api",
+      "ref": "api-governance-agent"
+    },
+    {
+      "name": "observability",
+      "ref": "observability-operability-agent"
+    }
+  ],
+
+  "workflow": {
+    "type": "parallel",
+    "steps": [
+      {
+        "step": "run-all-agents",
+        "agents": [
+          "structural",
+          "domain",
+          "resilience",
+          "performance",
+          "api",
+          "observability"
+        ]
+      },
+      {
+        "step": "aggregate-results",
+        "action": "merge-findings"
+      },
+      {
+        "step": "generate-final-report",
+        "action": "build-markdown-report"
+      }
+    ]
+  },
+
+  "output": {
+    "format": "markdown",
+    "sections": [
+      "Executive Summary",
+      "6-Pillar Scorecard",
+      "Critical Findings",
+      "Architecture Smells",
+      "Refactoring Recommendations",
+      "C4 Diagrams",
+      "Architecture Decision Records (ADRs)",
+      "Technical Debt Roadmap"
+    ]
+  }
+}

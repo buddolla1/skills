@@ -1,0 +1,187 @@
+{
+  "name": "fullstack-project-architecture-analyzer",
+  "id": "fullstack-project-architecture-analyzer",
+  "description": "Analyzes React, Spring Boot, or combined full-stack projects and generates architecture with HLD, LLD, components, and flowcharts in Markdown.",
+  "version": "1.0",
+
+  "triggers": [
+    "manual",
+    "on_project_open"
+  ],
+
+  "strategy": {
+    "chunking": "by-module",
+    "maxFilesPerAgent": 50,
+    "parallelExecution": true,
+    "executionStrategy": "parallel-with-dependencies",
+    "parallelAgents": 3,
+    "minAgents": 5,
+    "maxAgents": 5
+  },
+
+  "input": {
+    "type": "folder",
+    "description": "Root folder of the project to analyze"
+  },
+
+  "output": {
+    "type": "file",
+    "format": "markdown",
+    "file_name": "{ProjectName}-Architecture.md",
+    "file_name_strategy": "derive-from-project",
+    "file_name_description": "File name is derived from package.json 'name', settings.gradle 'rootProject.name', pom.xml 'artifactId', or fallback to root folder name.",
+    "description": "Generated project architecture document with HLD, LLD, flowcharts, and component responsibilities.",
+    "sections": [
+      "Architecture Overview",
+      "Technology Stack Summary",
+      "System Context & External Integrations",
+      "High-Level Design (HLD)",
+      "Low-Level Design (LLD)",
+      "Architecture Diagrams",
+      "Flow Diagrams",
+      "Component Responsibilities",
+      "Dependency Mapping"
+    ]
+  },
+
+  "instructions": [
+    {
+      "role": "system",
+      "content": "You are an AI full-stack project architecture analyzer. Based on the selected project type (React, Spring Boot, or Full-stack), scan the project and generate architecture diagrams and component/module breakdown.\n\nFor React projects: detect components, hooks, context, pages, services, and routes.\nFor Spring Boot projects: detect controllers, services, repositories, entities, DTOs, and REST endpoints.\nFor full-stack projects: combine frontend and backend architecture, mapping API calls between frontend and backend.\n\nOutput file naming:\n1. settings.gradle 'rootProject.name'\n2. pom.xml 'artifactId'\n3. package.json 'name'\n4. fallback to root folder name\n\nAlways ask clarifying questions if required before starting analysis."
+    },
+    {
+      "role": "user",
+      "content": "Analyze the project and generate:\n1. HLD diagram\n2. LLD diagrams\n3. Flowcharts for main processes and user actions / API calls\n4. Component/module list with responsibilities\n\nOutput everything in Markdown with Mermaid diagrams.\n\nBefore proceeding, ask the user which analysis mode they prefer."
+    }
+  ],
+
+  "skills": [
+    {
+      "name": "project_scanner",
+      "description": "Recursively scans project files based on selected mode: React (.js/.jsx/.ts/.tsx), Spring Boot (.java, resources), or both."
+    },
+    {
+      "name": "dependency_analyzer",
+      "description": "Analyzes relationships between components, hooks, context, services, controllers, repositories, and entities."
+    },
+    {
+      "name": "process_flow_extractor",
+      "description": "Identifies user actions, API flows, backend processes, database interactions, and state updates for flowcharts."
+    },
+    {
+      "name": "diagram_generator",
+      "description": "Generates Mermaid diagrams for HLD, LLD, and flowcharts tailored to project type."
+    },
+    {
+      "name": "markdown_writer",
+      "description": "Writes all diagrams, flows, and components into {ProjectName}-Architecture.md. Project name is resolved from package.json, settings.gradle, pom.xml, or root folder."
+    }
+  ],
+
+  "workflow": [
+    {
+      "step": "scan_project",
+      "skill": "project_scanner",
+      "description": "Scan project files and detect components, hooks, pages, services, routes (React), or controllers, services, repositories, entities (Spring Boot)."
+    },
+    {
+      "step": "parallel_analysis",
+      "parallel": [
+        {
+          "step": "analyze_dependencies",
+          "skill": "dependency_analyzer",
+          "description": "Map relationships between frontend and/or backend modules and services."
+        },
+        {
+          "step": "extract_process_flows",
+          "skill": "process_flow_extractor",
+          "description": "Detect user interactions, API calls, backend flows, and database operations."
+        },
+        {
+          "step": "generate_diagrams",
+          "skill": "diagram_generator",
+          "description": "Generate HLD, LLD, and flowcharts in Mermaid syntax."
+        }
+      ]
+    },
+    {
+      "step": "create_markdown",
+      "skill": "markdown_writer",
+      "description": "Compile all diagrams, flows, and component/module details into the final Markdown file."
+    }
+  ],
+
+  "settings": {
+    "mermaid_enabled": true,
+    "generate_flowcharts": true,
+    "include_component_details": true,
+    "framework_mode": "fullstack",
+
+    "scan_patterns": {
+      "react": [
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "components/**/*",
+        "pages/**/*",
+        "services/**/*",
+        "hooks/**/*"
+      ],
+      "springboot": [
+        "src/main/java/**/*.java",
+        "src/main/resources/**/*"
+      ],
+      "fullstack": [
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "components/**/*",
+        "pages/**/*",
+        "services/**/*",
+        "hooks/**/*",
+        "src/main/java/**/*.java",
+        "src/main/resources/**/*"
+      ]
+    },
+
+    "exclude_patterns": [
+      "node_modules/**/*",
+      ".git/**/*",
+      "dist/**/*",
+      "build/**/*",
+      "target/**/*"
+    ]
+  },
+
+  "metadata": {
+    "category": "project_analysis",
+    "compatible_with": [
+      "VS Code Copilot",
+      "JetBrains Copilot"
+    ],
+    "output_preview": true
+  },
+
+  "preferredPrompts": [
+    "@fullstack-project-architecture-analyzer",
+    "@fullstack-project-architecture-analyzer analyze root=./ generate {ProjectName}-Architecture.md",
+    "@fullstack-project-architecture-analyzer stack=full-stack include frontend and backend",
+    "@fullstack-project-architecture-analyzer stack=react analyze components and UI",
+    "@fullstack-project-architecture-analyzer stack=spring-boot analyze services and APIs",
+    "@fullstack-project-architecture-analyzer include=flowcharts,components map integrations"
+  ],
+
+  "interaction": {
+    "enabled": true,
+    "mode": "guided-questions",
+    "trigger": "@fullstack-project-architecture-analyzer",
+    "questions": [
+      "What type of project is this? (React / Spring Boot / Full-stack)",
+      "Do you want full analysis or only key components?",
+      "Include diagrams? (Yes/No)",
+      "Focus area? (Architecture / APIs / UI / Data Flow)"
+    ]
+  }
+}

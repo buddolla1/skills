@@ -1,0 +1,210 @@
+{
+  "agents": [
+    {
+      "name": "ultimate-codebase-analysis-agent",
+      "version": "1.0",
+      "description": "Full-scale multi-agent system for scanning, analyzing, and detecting issues in large codebases",
+      "mode": "full",
+
+      "strategy": {
+        "chunking": "by-module",
+        "maxFilesPerAgent": 50,
+        "parallelExecution": true,
+        "parallelAgents": 3,
+        "minAgents": 6,
+        "maxAgents": 9
+      },
+
+      "severityModel": {
+        "critical": "Crashes, data loss, security vulnerabilities",
+        "high": "Unhandled exceptions, memory leaks",
+        "medium": "Performance issues, bad practices",
+        "low": "Code smells, readability issues"
+      },
+
+      "systemPrompt": "You are a principal software architect and AI orchestrator. Analyze extremely large codebases by breaking them into modules and distributing work across internal agents. Combine outputs into a single, structured, actionable report.",
+
+      "userInteraction": {
+        "enabled": true,
+        "triggerPattern": "@ultimate-codebase-analysis-agent",
+        "questions": [
+          {
+            "id": "scanMode",
+            "question": "What type of scan would you like to perform?",
+            "type": "choice",
+            "options": [
+              {
+                "value": "full",
+                "label": "Full Scan",
+                "description": "Analyze entire codebase including static, exception, dependency and compliance"
+              },
+              {
+                "value": "diff",
+                "label": "Diff Scan",
+                "description": "Analyze only changed files since last commit"
+              }
+            ],
+            "required": true,
+            "default": "full"
+          }
+        ]
+      },
+
+      "agents": [
+        {
+          "name": "scanner",
+          "type": "internal",
+          "systemPrompt": "Scan repository. For full mode: scan entire repo and build structured file map. For diff mode: scan changed files only.",
+          "outputs": ["fileTree", "modules", "fileTypes"]
+        },
+        {
+          "name": "static-analyzer",
+          "type": "internal",
+          "systemPrompt": "Perform deep static analysis. Detect bugs, anti-patterns and performance issues.",
+          "rules": [
+            "Detect null pointer risks",
+            "Check improper resource handling",
+            "Identify dead code",
+            "Detect inefficient queries",
+            "Detect concurrency issues"
+          ],
+          "outputs": ["issues"]
+        },
+        {
+          "name": "exception-analyzer",
+          "type": "internal",
+          "systemPrompt": "Analyze exception handling thoroughly in Java backend systems.",
+          "rules": [
+            "Find unhandled exceptions",
+            "Detect empty catch blocks",
+            "Detect generic catch(Exception)",
+            "Check logging of exceptions",
+            "Identify missing retry/fallback",
+            "Detect swallowed exceptions"
+          ],
+          "outputs": ["exceptionIssues"]
+        },
+        {
+          "name": "dependency-analyzer",
+          "type": "internal",
+          "systemPrompt": "Analyze dependencies in pom.xml and build.gradle.",
+          "rules": [
+            "Detect outdated dependencies",
+            "Check vulnerabilities",
+            "Identify version conflicts",
+            "Suggest modern alternatives"
+          ],
+          "outputs": ["dependencyIssues"]
+        },
+        {
+          "name": "instruction-compliance-verifier",
+          "type": "internal",
+          "systemPrompt": "If an instruction source is available in the workspace, enforce its rules and detect violations and anti-patterns. If no instruction file is available, skip compliance verification.",
+          "contextSources": ["workspace", "git_diff"],
+          "optionalWhen": "instruction-file-present",
+          "outputs": ["complianceSummary", "complianceViolations", "complianceScore"],
+          "rulesEngine": {
+            "enabled": true,
+            "ruleExtraction": "dynamic-from-instructions-md",
+            "strictMode": true
+          }
+        },
+        {
+          "name": "performance-analyzer",
+          "type": "internal",
+          "systemPrompt": "Analyze CPU, memory, allocation, caching, database, and concurrency performance risks in Java and Spring Boot code.",
+          "rules": [
+            "Detect inefficient loops and object allocations",
+            "Analyze thread usage and async patterns",
+            "Identify blocking calls and I/O bottlenecks",
+            "Detect database performance issues",
+            "Suggest caching and parallelization opportunities"
+          ],
+          "outputs": ["performanceIssues"]
+        },
+        {
+          "name": "reporter",
+          "type": "internal",
+          "systemPrompt": "Generate consolidated report with categorized issues and recommendations.",
+          "format": "markdown",
+          "template": {
+            "summary": "",
+            "criticalIssues": [],
+            "highIssues": [],
+            "mediumIssues": [],
+            "lowIssues": [],
+            "exceptionHighlights": [],
+            "dependencyRisks": [],
+            "recommendations": [],
+            "complianceSummary": "",
+            "complianceViolations": [],
+            "complianceScore": null,
+            "performanceHighlights": []
+          }
+        }
+      ],
+
+      "workflow": [
+        {
+          "step": "scan",
+          "agent": "scanner"
+        },
+        {
+          "step": "parallel-analysis-full",
+          "condition": "scanMode=full",
+          "parallel": [
+            { "step": "static-analysis", "agent": "static-analyzer" },
+            { "step": "exception-analysis", "agent": "exception-analyzer" },
+            { "step": "dependency-check", "agent": "dependency-analyzer" },
+            { "step": "performance-analysis", "agent": "performance-analyzer" }
+          ]
+        },
+        {
+          "step": "parallel-analysis-diff",
+          "condition": "scanMode=diff",
+          "parallel": [
+            { "step": "static-analysis", "agent": "static-analyzer" },
+            { "step": "exception-analysis", "agent": "exception-analyzer" }
+          ]
+        },
+        {
+          "step": "compliance-verification",
+          "agent": "instruction-compliance-verifier",
+          "optional": true,
+          "condition": "run only when an instructions file is available"
+        },
+        {
+          "step": "report-generation",
+          "agent": "reporter"
+        }
+      ],
+
+      "output": {
+        "type": "markdown",
+        "file": "codebase-analysis-report.md"
+      },
+
+      "preferredPrompts": [
+        "@ultimate-codebase-analysis-agent",
+        "@ultimate-codebase-analysis-agent scanMode=full",
+        "@ultimate-codebase-analysis-agent scanMode=diff",
+        "@ultimate-codebase-analysis-agent static-analysis",
+        "@ultimate-codebase-analysis-agent exception-analysis",
+        "@ultimate-codebase-analysis-agent dependency-check",
+        "@ultimate-codebase-analysis-agent performance-analysis",
+        "@ultimate-codebase-analysis-agent summarize critical issues",
+        "@ultimate-codebase-analysis-agent scan module portal"
+      ],
+
+      "complianceScoreCalculation": {
+        "start": 100,
+        "rules": [
+          "Deduct 10 points for each Critical issue",
+          "Deduct 7 points for each High issue",
+          "Deduct 4 points for each Medium issue",
+          "Deduct 2 points for each Low issue"
+        ]
+      }
+    }
+  ]
+}

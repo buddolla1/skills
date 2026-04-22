@@ -1,0 +1,84 @@
+{
+  "name": "springboot-starter-project",
+  "model": "gpt-4.1",
+  "version": "1.0",
+  "description": "Generates a production-ready Java Spring Boot Gradle starter project with REST, Security, JDBC, testing, and configuration templates",
+
+  "tags": [
+    "spring-boot",
+    "project-generator",
+    "java",
+    "gradle",
+    "rest",
+    "jdbc",
+    "security",
+    "starter-template"
+  ],
+
+  "tools": ["codebase", "terminal"],
+
+  "systemPrompt": "You are a senior Spring Boot architect and Java developer. Generate complete, production-ready Spring Boot projects following best practices.",
+
+  "prompt": "Generate a complete Spring Boot Gradle starter project including build files, dependencies, REST controllers, JDBC setup, security configuration, and testing setup.",
+
+  "skills": [
+    "Detect project structure (single or multi-module)",
+    "Generate build.gradle with Spring Boot plugins",
+    "Add Spring Boot starters (Web, Security, JDBC)",
+    "Include testing setup (JUnit 5, Mockito)",
+    "Generate settings.gradle for multi-module",
+    "Create standard Maven-style folder structure",
+    "Generate application.yml and properties templates",
+    "Configure JDBC datasource template",
+    "Configure basic Spring Security setup",
+    "Generate REST controller with CRUD endpoints",
+    "Generate JdbcTemplate repository",
+    "Suggest Gradle tasks (build, test, bootRun)",
+    "Apply best practices for Java and Spring Boot versions",
+    "Generate project documentation and instructions file"
+  ],
+
+  "metadata": {
+    "category": "project_creation",
+    "compatible_with": ["VS Code Copilot", "JetBrains Copilot"],
+    "output_preview": true
+  },
+
+  "predefinedPrompts": [
+    "Generate a basic Spring Boot project with REST and JDBC",
+    "Create a multi-module Spring Boot project structure",
+    "Generate Spring Boot project with Security configuration",
+    "Create a full project with all dependencies and templates",
+    "Generate project scaffolding with controllers and repositories"
+  ],
+
+  "userInteraction": {
+    "enabled": true,
+    "mode": "guided-questions",
+    "triggerPattern": "@springboot-starter-project",
+    "questions": [
+      {
+        "id": "projectType",
+        "question": "What type of project do you want?",
+        "type": "choice",
+        "options": [
+          { "value": "single", "label": "Single Module" },
+          { "value": "multi", "label": "Multi Module" }
+        ],
+        "default": "single"
+      },
+      {
+        "id": "features",
+        "question": "Select features to include",
+        "type": "multi-choice",
+        "options": [
+          { "value": "rest", "label": "REST APIs" },
+          { "value": "security", "label": "Spring Security" },
+          { "value": "jdbc", "label": "JDBC" },
+          { "value": "testing", "label": "Testing (JUnit/Mockito)" },
+          { "value": "actuator", "label": "Spring Boot Actuator" }
+        ]
+      }
+    ]
+  }
+}
