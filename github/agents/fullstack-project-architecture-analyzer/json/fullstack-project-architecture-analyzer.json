@@ -30,6 +30,7 @@
     "file_name": "{ProjectName}-Architecture.md",
     "file_name_strategy": "derive-from-project",
     "file_name_description": "File name is derived from package.json 'name', settings.gradle 'rootProject.name', pom.xml 'artifactId', or fallback to root folder name.",
+    "template_file": ".github/agents/Architecture-template.md",
     "description": "Generated project architecture document with HLD, LLD, flowcharts, and component responsibilities.",
     "sections": [
       "Architecture Overview",

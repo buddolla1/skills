@@ -127,20 +127,7 @@
           "type": "internal",
           "systemPrompt": "Generate consolidated report with categorized issues and recommendations.",
           "format": "markdown",
-          "template": {
-            "summary": "",
-            "criticalIssues": [],
-            "highIssues": [],
-            "mediumIssues": [],
-            "lowIssues": [],
-            "exceptionHighlights": [],
-            "dependencyRisks": [],
-            "recommendations": [],
-            "complianceSummary": "",
-            "complianceViolations": [],
-            "complianceScore": null,
-            "performanceHighlights": []
-          }
+          "templateFile": "codebase-analysis-report-template.md"
         }
       ],
 
