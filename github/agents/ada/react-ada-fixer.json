@@ -1,366 +1,167 @@
 {
-  "name": "React ADA Accessibility Remediation Agent",
+  "name": "React ADA Accessibility Fixer",
   "id": "react-ada-fixer",
-  "description": "Processes ADA accessibility reports and recommends or applies WCAG-aligned fixes to React code. Supports raw JSX/TSX input and text extracted from Word documents.",
-  "version": "2.0.0",
-  "type": "processor",
+  "systemPrompt": "You are a senior React accessibility fixer. Your job is to repair accessibility issues in JSX/TSX while preserving product behavior and avoiding unsafe assumptions. Prefer native semantics over ARIA, make the smallest correct change, and refuse ambiguous auto-fixes when intent is unclear. Before applying any code changes, ask the user to confirm that they want the fix applied. If confirmation is not provided, return the analysis, recommended fix, and manual verification steps without altering code. Fix keyboard access, labels, focus management, names, roles, values, and screen reader behavior only when the correction is clearly justified. When a full fix cannot be proven statically, provide the safest partial fix plus manual verification steps. Always explain why the change is accessible and note any remaining review risks.",
+  "description": "Analyzes React files for ADA/WCAG accessibility issues and applies conservative fixes with explicit review boundaries and best-practice guidance.",
+  "version": "1.0.0",
   "input": {
     "type": "object",
     "properties": {
-      "sourceDocument": {
-        "type": "object",
-        "description": "Optional Word document input for source code or analysis text. Provide a local file path, extracted text, or base64-encoded binary content. Enable OCR or image extraction when the document contains meaningful visual content.",
-        "oneOf": [
-          {
-            "required": ["filePath"],
-            "not": {
-              "anyOf": [
-                { "required": ["content"] },
-                { "required": ["contentBase64"] },
-                { "required": ["extractedText"] }
-              ]
-            }
-          },
-          {
-            "required": ["content"],
-            "not": {
-              "anyOf": [
-                { "required": ["filePath"] },
-                { "required": ["contentBase64"] },
-                { "required": ["extractedText"] }
-              ]
-            }
-          },
-          {
-            "required": ["contentBase64"],
-            "not": {
-              "anyOf": [
-                { "required": ["filePath"] },
-                { "required": ["content"] },
-                { "required": ["extractedText"] }
-              ]
-            }
-          },
-          {
-            "required": ["extractedText"],
-            "not": {
-              "anyOf": [
-                { "required": ["filePath"] },
-                { "required": ["content"] },
-                { "required": ["contentBase64"] }
-              ]
-            }
-          }
-        ],
-        "properties": {
-          "fileName": {
-            "type": "string",
-            "description": "Original Word document name, for example `report.docx`"
-          },
-          "filePath": {
-            "type": "string",
-            "description": "Local filesystem path to the Word document"
-          },
-          "mimeType": {
-            "type": "string",
-            "enum": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"],
-            "description": "Word document MIME type"
-          },
-          "content": {
-            "type": "string",
-            "description": "Plain text extracted from the Word document"
-          },
-          "extractedText": {
-            "type": "string",
-            "description": "Full text extracted from the Word document before processing"
-          },
-          "contentBase64": {
-            "type": "string",
-            "description": "Base64-encoded Word document bytes for direct binary upload"
-          },
-          "extractImages": {
-            "type": "boolean",
-            "description": "Whether to extract embedded images from the Word document for separate analysis",
-            "default": false
-          },
-          "enableOCR": {
-            "type": "boolean",
-            "description": "Whether to run OCR on extracted images or image-only regions in the Word document",
-            "default": false
-          },
-          "imageAssets": {
-            "type": "array",
-            "description": "Optional extracted image assets supplied separately for OCR or visual analysis",
-            "items": {
-              "type": "object",
-              "properties": {
-                "fileName": {
-                  "type": "string",
-                  "description": "Image file name"
-                },
-                "mimeType": {
-                  "type": "string",
-                  "description": "Image MIME type, such as `image/png` or `image/jpeg`"
-                },
-                "contentBase64": {
-                  "type": "string",
-                  "description": "Base64-encoded image bytes"
-                },
-                "altText": {
-                  "type": "string",
-                  "description": "Optional OCR or user-provided description of the image"
-                }
-              }
-            }
-          }
-        }
-      },
       "fileContent": {
         "type": "string",
-        "description": "Original React JSX/TSX code"
+        "description": "React component code (JSX/TSX)"
       },
-      "adaReport": {
-        "type": "object",
-        "description": "Accessibility report generated by the analyzer agent",
-        "properties": {
-          "issues": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "type": { "type": "string" },
-                "severity": { "type": "string" },
-                "line": { "type": "number" },
-                "description": { "type": "string" },
-                "wcagReference": { "type": "string" },
-                "suggestion": { "type": "string" }
-              }
-            }
-          }
+      "files": {
+        "type": "array",
+        "description": "Optional multi-file context when a fix depends on surrounding components, hooks, or shared UI patterns",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "content": { "type": "string" },
+            "role": { "type": "string" }
+          },
+          "required": ["path", "content"]
         }
       },
-      "fixMode": {
+      "issue": {
         "type": "string",
-        "enum": ["suggest_only", "auto_fix"],
-        "default": "suggest_only"
+        "description": "Accessibility issue to fix (e.g., missing aria-label, keyboard navigation issue)"
+      },
+      "componentPurpose": {
+        "type": "string",
+        "description": "What the component is expected to do so fixes preserve behavior"
+      },
+      "framework": {
+        "type": "string",
+        "enum": ["react"],
+        "default": "react"
+      },
+      "scanType": {
+        "type": "string",
+        "enum": ["targeted_fix", "full_scan"],
+        "default": "targeted_fix"
       }
     },
-    "required": ["adaReport"],
-    "anyOf": [
-      { "required": ["fileContent"] },
-      { "required": ["sourceDocument"] }
-    ]
+    "required": ["fileContent", "issue"]
   },
   "output": {
     "type": "object",
     "properties": {
-      "fixSummary": {
-        "type": "string",
-        "description": "Concise summary of the applied or recommended fixes"
-      },
-      "fixes": {
+      "issuesDetected": {
         "type": "array",
-        "description": "Structured list of individual accessibility fixes",
-        "items": {
-          "type": "object",
-          "properties": {
-            "issueType": { "type": "string", "description": "Accessibility issue category" },
-            "line": { "type": "number", "description": "Affected line number, when available" },
-            "originalCode": { "type": "string", "description": "Original code fragment" },
-            "fixedCode": { "type": "string", "description": "Updated code fragment" },
-            "explanation": { "type": "string", "description": "Reason the fix was applied" }
-          }
-        }
+        "items": { "type": "string" }
       },
-      "updatedCode": {
-        "type": "string",
-        "description": "Complete updated source code"
+      "canAutoFix": {
+        "type": "boolean"
+      },
+      "needsConfirmation": {
+        "type": "boolean"
+      },
+      "fixedCode": {
+        "type": "string"
       },
       "diff": {
-        "type": "string",
-        "description": "Unified diff showing the applied changes"
+        "type": "string"
       },
-      "reportFile": {
-        "type": "string",
-        "description": "Path to the generated Markdown report file containing the findings"
+      "explanation": {
+        "type": "string"
+      },
+      "reviewRequired": {
+        "type": "boolean"
+      },
+      "safetyNotes": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "accessibilityChecklist": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "manualVerificationSteps": {
+        "type": "array",
+        "items": { "type": "string" }
       }
     }
   },
   "workflow": [
-      {
-        "step": "Parse ADA report",
-        "action": "Extract issues and map them to fix strategies"
-      },
-      {
-        "step": "Normalize source input",
-        "action": "Resolve source input from `fileContent`, `sourceDocument.extractedText`, `sourceDocument.filePath`, `sourceDocument.contentBase64`, or `sourceDocument.content` before processing"
-      },
-      {
-        "step": "Handle document images",
-        "action": "If enabled, extract embedded images and analyze OCR output or `imageAssets` before generating findings"
-      },
-      {
-        "step": "Locate code segments",
-        "action": "Identify affected lines and components in the JSX"
-      },
-      {
-        "step": "Apply fix rules",
-        "action": "Transform code using WCAG-compliant patterns"
-      },
-      {
-        "step": "Generate updated code",
-        "action": "Return modified JSX when `fixMode` is set to `auto_fix`"
-      },
-      {
-        "step": "Generate report",
-        "action": "Write the findings, fixes, and disposition into `docs/report.md` when `fixMode` is `suggest_only`"
-      },
-      {
-        "step": "Explain fixes",
-        "action": "Provide concise reasoning for each fix"
-      }
-    ],
+    {
+      "step": "Parse React file",
+      "action": "Analyze JSX structure, semantic HTML usage, ARIA attributes, event handlers, and surrounding context when available."
+    },
+    {
+      "step": "Detect accessibility issues",
+      "action": "Identify violations based on WCAG 2.1 and applicable WCAG 2.2 checks."
+    },
+    {
+      "step": "Apply fixes",
+      "action": "Prepare conservative fixes that preserve behavior, prefer native semantics, and avoid unsafe auto-conversion when intent is ambiguous."
+    },
+    {
+      "step": "Request confirmation",
+      "action": "Ask the user to confirm whether the fix should be applied before modifying code."
+    },
+    {
+      "step": "Generate diff",
+      "action": "Show before vs after changes only after confirmation is received."
+    },
+    {
+      "step": "Explain changes",
+      "action": "Provide reasoning for each fix plus any manual verification that remains necessary."
+    }
+  ],
   "skills": [
-    "ada-report-parser",
-    "jsx-locator",
-    "wcag-fix-engine",
+    "jsx-parser",
+    "wcag-validator",
     "aria-enhancer",
-    "semantic-html-transformer",
     "keyboard-accessibility-fixer",
-    "form-label-fixer",
-    "image-alt-fixer",
+    "semantic-html-refactor",
+    "screen-reader-optimizer",
+    "contrast-safety-checker",
+    "focus-management-fixer",
     "diff-generator"
   ],
-  "fixStrategies": {
-    "image-alt-missing": {
-      "fix": "Add alt attribute",
-      "template": "<img src=\"{src}\" alt=\"{description}\" />"
-    },
-    "button-name-missing": {
-      "fix": "Add accessible label",
-      "template": "<button aria-label=\"{label}\">{content}</button>"
-    },
-    "clickable-div": {
-      "fix": "Replace div with button",
-      "template": "<button onClick={handler}>{content}</button>"
-    },
-    "input-label-missing": {
-      "fix": "Add label element",
-      "template": "<label>{label}<input {...props} /></label>"
-    },
-    "aria-role-invalid": {
-      "fix": "Remove or correct ARIA role",
-      "template": "Use semantic HTML instead"
-    }
-  },
   "rules": [
-    "Prefer semantic HTML over ARIA where possible",
-    "Preserve existing behavior",
-    "Maintain keyboard accessibility",
-    "Preserve developer intent and UI semantics",
-    "Add only the attributes required to address the issue",
-    "Avoid unnecessary use of aria-* attributes"
-  ],
-  "interactions": [
-    {
-      "question": "Should fixes be applied automatically?",
-      "options": ["yes", "no"]
-    },
-    {
-      "question": "Should fixes prioritize minimal change or strict WCAG compliance?",
-      "options": ["minimal", "strict"]
-    }
+    "Prefer semantic HTML over ARIA when possible",
+    "Ensure all interactive elements are keyboard accessible",
+    "Every form input must have a label",
+    "Images must have alt text",
+    "Buttons must have accessible names",
+    "Avoid div/span for interactive elements unless necessary",
+    "Ensure focus management is handled properly",
+    "Do not auto-fix ambiguous patterns without preserving product behavior",
+    "Call out manual verification for runtime behavior that cannot be proven statically",
+    "Never apply code changes without explicit user confirmation"
   ],
   "examples": [
     {
       "input": {
-        "fileContent": "<div onClick={submit}>Submit</div>",
-        "adaReport": {
-          "issues": [
-            {
-              "type": "clickable-div",
-              "line": 1,
-              "description": "Not keyboard accessible"
-            }
-          ]
-        }
+        "fileContent": "<div onClick={handleClick}>Submit</div>",
+        "issue": "Not keyboard accessible"
       },
       "output": {
-        "fixes": [
-          {
-            "issueType": "clickable-div",
-            "fixedCode": "<button onClick={submit}>Submit</button>"
-          }
+        "issuesDetected": [
+          "Non-semantic interactive element used as a button",
+          "Missing keyboard support"
         ],
-        "reportFile": "docs/report.md"
-      }
-    },
-    {
-      "input": {
-        "sourceDocument": {
-          "fileName": "review-notes.docx",
-          "filePath": "/Users/maheswarbuddolla/softwares/skills3/docs/review-notes.docx",
-          "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          "content": "<div onClick={submit}>Submit</div>",
-          "extractImages": true,
-          "enableOCR": true,
-          "imageAssets": [
-            {
-              "fileName": "diagram.png",
-              "mimeType": "image/png",
-              "contentBase64": "iVBORw0KGgoAAAANSUhEUgAA...",
-              "altText": "Flow diagram showing review steps"
-            }
-          ]
-        },
-        "adaReport": {
-          "issues": [
-            {
-              "type": "clickable-div",
-              "line": 1,
-              "description": "Not keyboard accessible"
-            }
-          ]
-        }
-      },
-      "output": {
-        "fixes": [
-          {
-            "issueType": "clickable-div",
-            "fixedCode": "<button onClick={submit}>Submit</button>"
-          }
+        "canAutoFix": true,
+        "needsConfirmation": true,
+        "fixedCode": "<button onClick={handleClick}>Submit</button>",
+        "diff": "- <div onClick={handleClick}>Submit</div>\n+ <button onClick={handleClick}>Submit</button>",
+        "explanation": "A native button provides keyboard support, role semantics, and accessible name behavior without extra ARIA.",
+        "reviewRequired": false,
+        "safetyNotes": [
+          "If this control navigates or toggles state, confirm the native button pattern still matches the intended behavior."
         ],
-        "reportFile": "docs/report.md"
-      }
-    },
-    {
-      "input": {
-        "sourceDocument": {
-          "fileName": "review-notes.docx",
-          "filePath": "/Users/maheswarbuddolla/softwares/skills3/docs/review-notes.docx",
-          "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          "contentBase64": "UEsDBBQAAAAIA...",
-          "extractImages": true,
-          "enableOCR": true
-        },
-        "adaReport": {
-          "issues": [
-            {
-              "type": "clickable-div",
-              "line": 1,
-              "description": "Not keyboard accessible"
-            }
-          ]
-        }
-      },
-      "output": {
-        "fixes": [
-          {
-            "issueType": "clickable-div",
-            "fixedCode": "<button onClick={submit}>Submit</button>"
-          }
+        "accessibilityChecklist": [
+          "Keyboard activation works with Enter and Space",
+          "Focus is visible",
+          "Accessible name is announced correctly"
         ],
-        "reportFile": "docs/report.md"
+        "manualVerificationSteps": [
+          "Tab to the control and activate it with keyboard only.",
+          "Confirm the expected action still occurs after the refactor."
+        ]
       }
     }
   ]
