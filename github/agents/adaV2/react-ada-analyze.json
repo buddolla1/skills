@@ -1,0 +1,508 @@
+{
+  "name": "React ADA Accessibility Analyzer",
+  "id": "react-ada-analyzer",
+  "systemPrompt": "You are a senior React accessibility tester aligned to ARC-style accessibility workflows. Your job is to perform static and contextual ADA/WCAG analysis on JSX/TSX and produce a professional consolidated report for stakeholders. Before analyzing, ask the user to choose the assessment scope: single page, user flow, domain, or full codebase. Support ARC-style inputs such as page URLs, domain context, user flows, entry points, route groups, package metadata, and design-system context when provided. Separate automated findings from manual findings and make it clear where user-flow validation is required. Prefer precision over noise. Use semantic HTML first, then ARIA only when necessary. Call out keyboard, focus, screen reader, contrast, reflow, motion, live region, image, form, and custom control issues. When the intent is ambiguous, explain the uncertainty instead of overclaiming. Always provide WCAG references when possible, include practical remediation guidance, summarize overall risk, and clearly mark any runtime behavior that must be tested manually.",
+  "description": "Performs ARC-style accessibility analysis on React code and user flows to detect ADA/WCAG issues, separate automated and manual findings, and provide actionable recommendations.",
+  "version": "1.0.0",
+  "input": {
+    "type": "object",
+    "properties": {
+      "analysisMode": {
+        "type": "string",
+        "enum": ["selected_file", "full_codebase"],
+        "default": "selected_file"
+      },
+      "assessmentScope": {
+        "type": "string",
+        "enum": ["single_page", "user_flow", "domain", "full_codebase"],
+        "default": "single_page"
+      },
+      "fileContent": {
+        "type": "string",
+        "description": "React component code (JSX/TSX)"
+      },
+      "pageUrl": {
+        "type": "string",
+        "description": "Primary page URL or route for a single-page assessment"
+      },
+      "pageUrls": {
+        "type": "array",
+        "description": "List of page URLs or routes in scope for domain or flow analysis",
+        "items": { "type": "string" }
+      },
+      "domain": {
+        "type": "string",
+        "description": "Target domain or application context for ARC-style review"
+      },
+      "userFlows": {
+        "type": "array",
+        "description": "Business or task flows to test end-to-end",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+            "steps": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["name", "steps"]
+        }
+      },
+      "projectFiles": {
+        "type": "array",
+        "description": "Full React codebase files for repository-wide analysis",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "content": { "type": "string" },
+            "role": {
+              "type": "string",
+              "description": "Optional role such as entry, component, hook, style, route, test, or config"
+            }
+          },
+          "required": ["path", "content"]
+        }
+      },
+      "files": {
+        "type": "array",
+        "description": "Optional multi-file React context for cross-component analysis",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "content": { "type": "string" },
+            "role": {
+              "type": "string",
+              "description": "Optional role such as parent, child, hook, stylesheet, or test"
+            }
+          },
+          "required": ["path", "content"]
+        }
+      },
+      "entryPoints": {
+        "type": "array",
+        "description": "Primary application entry points to prioritize during analysis",
+        "items": {
+          "type": "string"
+        }
+      },
+      "routes": {
+        "type": "array",
+        "description": "Application route definitions or route files to inspect for navigation and page-level accessibility",
+        "items": {
+          "type": "string"
+        }
+      },
+      "designSystemFiles": {
+        "type": "array",
+        "description": "Shared UI kit, design system, or component library files",
+        "items": {
+          "type": "string"
+        }
+      },
+      "packageJson": {
+        "type": "object",
+        "description": "Package metadata to infer framework, scripts, and dependency context",
+        "properties": {}
+      },
+      "frameworkMeta": {
+        "type": "object",
+        "description": "Optional framework and app metadata such as Next.js, Vite, or custom routing info",
+        "properties": {}
+      },
+      "scanScope": {
+        "type": "string",
+        "enum": ["selected_file", "full_codebase"],
+        "default": "selected_file"
+      },
+      "componentPurpose": {
+        "type": "string",
+        "description": "Short description of what the component is supposed to do for users"
+      },
+      "interactionType": {
+        "type": "string",
+        "enum": ["button", "link", "form", "menu", "modal", "tab", "accordion", "table", "custom_control", "content"],
+        "description": "Primary interaction pattern of the UI under review"
+      },
+      "focusAreas": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "aria",
+            "keyboard",
+            "forms",
+            "images",
+            "semantic_html",
+            "color_contrast",
+            "screen_reader",
+            "focus_management",
+            "live_regions",
+            "motion",
+            "reflow"
+          ]
+        },
+        "default": ["aria", "keyboard", "forms", "semantic_html", "color_contrast"]
+      },
+      "complianceLevel": {
+        "type": "string",
+        "enum": ["A", "AA", "AAA"],
+        "default": "AA"
+      }
+    },
+    "required": ["analysisMode"],
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "analysisMode": {
+              "const": "selected_file"
+            }
+          }
+        },
+        "then": {
+          "required": ["fileContent"]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "analysisMode": {
+              "const": "full_codebase"
+            }
+          }
+        },
+        "then": {
+          "required": ["projectFiles"]
+        }
+      }
+    ]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "severity": {
+              "type": "string",
+              "enum": ["critical", "high", "medium", "low"]
+            },
+            "confidence": {
+              "type": "string",
+              "enum": ["high", "medium", "low"]
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["p0", "p1", "p2", "p3"]
+            },
+            "line": { "type": "number" },
+            "description": { "type": "string" },
+            "wcagReference": { "type": "string" },
+            "suggestion": { "type": "string" },
+            "exampleFix": { "type": "string" },
+            "impact": { "type": "string" },
+            "manualVerificationNeeded": { "type": "boolean" },
+            "testSteps": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "score": {
+        "type": "number",
+        "description": "Accessibility score out of 100"
+      },
+      "recommendations": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "manualChecks": {
+        "type": "array",
+        "description": "Accessibility checks that cannot be fully verified statically",
+        "items": { "type": "string" }
+      },
+      "automatedFindings": {
+        "type": "array",
+        "description": "Issues that can be detected through code or automated analysis",
+        "items": { "type": "string" }
+      },
+      "manualFindings": {
+        "type": "array",
+        "description": "Issues that require manual accessibility testing",
+        "items": { "type": "string" }
+      },
+      "userFlowFindings": {
+        "type": "array",
+        "description": "Findings observed during user-flow validation",
+        "items": { "type": "string" }
+      },
+      "riskSummary": {
+        "type": "string",
+        "description": "Concise summary of the highest-risk accessibility concerns"
+      },
+      "report": {
+        "type": "object",
+        "description": "Professional consolidated accessibility report",
+        "properties": {
+          "title": { "type": "string" },
+          "executiveSummary": { "type": "string" },
+          "scope": { "type": "string" },
+          "assessmentType": {
+            "type": "string",
+            "enum": ["single_page", "user_flow", "domain", "full_codebase"]
+          },
+          "coverageSummary": { "type": "string" },
+          "overallRisk": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "overallComplianceView": { "type": "string" },
+          "automatedSummary": { "type": "string" },
+          "manualSummary": { "type": "string" },
+          "topFindings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string" },
+                "severity": { "type": "string" },
+                "description": { "type": "string" },
+                "impact": { "type": "string" },
+                "wcagReference": { "type": "string" }
+              }
+            }
+          },
+          "manualVerificationSummary": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "userFlowSummary": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "remediationPlan": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "programRecommendations": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "conclusion": { "type": "string" }
+        }
+      }
+    }
+  },
+  "workflow": [
+    {
+      "step": "Select assessment scope",
+      "action": "Ask the user whether to analyze a single page, a user flow, a domain, or the full codebase"
+    },
+    {
+      "step": "Load ARC context",
+      "action": "Collect page URLs, user flows, domain metadata, entry points, routes, and design system files"
+    },
+    {
+      "step": "Map codebase",
+      "action": "Use projectFiles, entry points, routes, design system files, and package metadata to understand app structure"
+    },
+    {
+      "step": "Run automated checks",
+      "action": "Validate against WCAG 2.1 and relevant WCAG 2.2 checks where applicable"
+    },
+    {
+      "step": "Run manual checks",
+      "action": "Evaluate focus order, screen reader behavior, keyboard paths, and user-flow failures that automation cannot prove"
+    },
+    {
+      "step": "Detect violations",
+      "action": "Identify missing ARIA, labels, semantics, keyboard support, contrast risks, focus issues, and runtime behavior gaps"
+    },
+    {
+      "step": "Score calculation",
+      "action": "Assign score based on severity, user impact, confidence, issue count, and scope coverage"
+    },
+    {
+      "step": "Generate report",
+      "action": "Return structured automated findings, manual findings, remediation priorities, and a consolidated ARC-style report"
+    }
+  ],
+  "skills": [
+    "jsx-ast-parser",
+    "wcag-2.1-validator",
+    "wcag-2.2-validator",
+    "aria-attribute-checker",
+    "keyboard-navigation-checker",
+    "form-accessibility-checker",
+    "semantic-html-validator",
+    "image-alt-checker",
+    "color-contrast-checker",
+    "focus-management-checker",
+    "live-region-checker",
+    "user-flow-analysis-engine",
+    "domain-coverage-checker",
+    "screen-reader-compatibility-checker",
+    "accessibility-scoring-engine"
+  ],
+  "rules": [
+    "All interactive elements must be keyboard accessible",
+    "Images must include meaningful alt attributes",
+    "Form inputs must have associated labels",
+    "Use semantic HTML instead of div/span where possible",
+    "ARIA roles must be valid and not redundant",
+    "Avoid click handlers on non-interactive elements",
+    "Ensure focus visibility is maintained",
+    "Headings must follow logical order",
+    "Links must have descriptive text",
+    "Color contrast must meet the configured compliance level",
+    "Custom controls must expose name, role, and value where appropriate",
+    "Static analysis must call out cases that require manual keyboard and screen reader testing",
+    "ARC-style reporting must separate automated findings, manual findings, and user-flow findings"
+  ],
+  "interactions": [
+    {
+      "question": "What do you want me to analyze?",
+      "options": ["selected_file", "full_codebase"]
+    },
+    {
+      "question": "What ARC assessment scope should I use?",
+      "options": ["single_page", "user_flow", "domain", "full_codebase"]
+    },
+    {
+      "question": "Do you want a quick scan or deep accessibility audit?",
+      "options": ["quick", "deep"]
+    },
+    {
+      "question": "Should I include suggested fixes?",
+      "options": ["yes", "no"]
+    },
+    {
+      "question": "Do you want WCAG reference links in the report?",
+      "options": ["yes", "no"]
+    },
+    {
+      "question": "Should the report include manual test cases for screen reader and keyboard verification?",
+      "options": ["yes", "no"]
+    }
+  ],
+  "preferredPrompts": [
+    {
+      "id": "analysis_scope",
+      "question": "What do you want me to analyze?",
+      "options": ["selected_file", "full_codebase"],
+      "purpose": "Choose between a single file review and a repository-wide accessibility audit."
+    },
+    {
+      "id": "arc_scope",
+      "question": "What ARC assessment scope should I use?",
+      "options": ["single_page", "user_flow", "domain", "full_codebase"],
+      "purpose": "Choose between page-level, flow-level, domain-level, or repository-wide accessibility assessment."
+    },
+    {
+      "id": "analysis_depth",
+      "question": "Do you want a quick scan or deep accessibility audit?",
+      "options": ["quick", "deep"],
+      "purpose": "Control how exhaustive the findings and manual checks should be."
+    },
+    {
+      "id": "report_focus",
+      "question": "Should I include manual test cases for screen reader and keyboard verification?",
+      "options": ["yes", "no"],
+      "purpose": "Decide whether the report should include manual QA steps alongside code issues."
+    },
+    {
+      "id": "report_links",
+      "question": "Do you want WCAG reference links in the report?",
+      "options": ["yes", "no"],
+      "purpose": "Include or omit direct WCAG references in the final report."
+    }
+  ],
+  "examples": [
+    {
+      "input": {
+        "fileContent": "<img src='logo.png' />"
+      },
+      "output": {
+        "issues": [
+          {
+            "type": "image-alt-missing",
+            "severity": "high",
+            "confidence": "high",
+            "priority": "p1",
+            "description": "Image missing alt attribute",
+            "wcagReference": "WCAG 1.1.1",
+            "suggestion": "Add meaningful alt text",
+            "exampleFix": "<img src='logo.png' alt='Company logo' />",
+            "impact": "Screen reader users will not know what the image conveys.",
+            "manualVerificationNeeded": false,
+            "testSteps": [
+              "Inspect the image with a screen reader.",
+              "Confirm the alt text matches the image purpose."
+            ]
+          }
+        ],
+        "manualChecks": [
+          "Verify tab order and focus visibility across interactive elements.",
+          "Confirm screen reader announcements for custom controls and dynamic content."
+        ],
+        "automatedFindings": [
+          "Image missing alt attribute"
+        ],
+        "manualFindings": [
+          "Confirm screen reader announcements for custom controls and dynamic content."
+        ],
+        "userFlowFindings": [
+          "Single-page image review does not expose a flow-level failure."
+        ],
+        "riskSummary": "High risk issues are likely around keyboard access, missing labels, and custom controls; manual verification is still required for runtime behavior."
+        "report": {
+          "title": "React ADA Accessibility Report",
+          "executiveSummary": "This component contains a high-risk accessibility issue that affects assistive technology users and should be remediated before release.",
+          "scope": "Single-file analysis of the provided React component.",
+          "assessmentType": "single_page",
+          "coverageSummary": "Single-page review with static analysis and manual follow-up guidance.",
+          "overallRisk": "high",
+          "overallComplianceView": "The component shows partial alignment with WCAG guidance but does not yet meet expected accessibility standards for interactive or informative content.",
+          "automatedSummary": "One image-alt issue was identified through static analysis.",
+          "manualSummary": "Manual validation is still needed for keyboard and screen reader behavior around custom controls.",
+          "topFindings": [
+            {
+              "type": "image-alt-missing",
+              "severity": "high",
+              "description": "Image missing alt attribute",
+              "impact": "Screen reader users will not know what the image conveys.",
+              "wcagReference": "WCAG 1.1.1"
+            }
+          ],
+          "manualVerificationSummary": [
+            "Confirm keyboard flow and focus visibility in the browser.",
+            "Test screen reader announcements for custom controls and dynamic content."
+          ],
+          "userFlowSummary": [
+            "No multi-step flow was assessed in this single-page review."
+          ],
+          "remediationPlan": [
+            "Add meaningful alternative text to informative images.",
+            "Validate keyboard and screen reader behavior after fixes."
+          ],
+          "programRecommendations": [
+            "Run a user-flow assessment for interactive journeys.",
+            "Track recurring accessibility defects across shared components."
+          ],
+          "conclusion": "The component requires accessibility remediation and follow-up manual testing before it can be considered ready for production use."
+        }
+      }
+    }
+  ]
+}

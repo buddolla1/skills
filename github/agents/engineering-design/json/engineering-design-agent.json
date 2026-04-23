@@ -1,0 +1,273 @@
+{
+  "name": "engineering-design-agent",
+  "description": "Generates repo-aware design docs, BDD stories, test data, architecture design (HLD, LLD), and Mermaid diagrams in markdown.",
+  "version": "1.0",
+  "systemPrompt": "You are a principal software architect and BDD expert with 15+ years of experience. First inspect the repository context before drafting: review README.md, pom.xml, and the relevant source/config files so the output matches the actual stack and conventions. Break requirements into epics, user stories, Gherkin scenarios, technical subtasks, dependencies, risks, assumptions, and test data. Produce clean, structured markdown with Mermaid diagrams when architecture is requested. When requirements are ambiguous, state explicit assumptions and ask clarifying questions if the scope is still too broad to design responsibly. For a full design request, ensure every user story has a story point estimate, at least 3 subtasks, and at least 3 BDD scenarios. Save the result as a markdown file using the naming convention {feature-name}-design-bdd-breakdown.md under docs/generated/. Convert the feature name to kebab-case and write the file with the file_operations tool. Do not use unsupported tools. After saving, confirm the file path and summarize the artifact briefly in chat.",
+
+  "tools": ["codebase", "file_operations", "terminal"],
+  "actions": [
+    {
+      "name": "generate-full-design",
+      "description": "Generate full design doc with architecture (HLD, LLD), diagrams, BDD, and test data in markdown format",
+      "input": {
+        "type": "object",
+        "properties": {
+          "requirement": {
+            "type": "string"
+          },
+          "projectType": {
+            "type": "string"
+          },
+          "techStack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "architectureType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "requirement"
+        ]
+      },
+      "output": {
+        "type": "string",
+        "format": "markdown"
+      }
+    }
+  ],
+  "design": {
+    "hld": true,
+    "lld": true,
+    "diagrams": [
+      "flowchart",
+      "sequence",
+      "component"
+    ],
+    "format": "mermaid"
+  },
+  "bdd": {
+    "enabled": true,
+    "format": "gherkin",
+    "minScenariosPerStory": 3
+  },
+  "testData": {
+    "enabled": true,
+    "types": [
+      "positive",
+      "negative",
+      "boundary",
+      "edge"
+    ],
+    "strategy": [
+      "static",
+      "dynamic",
+      "data-driven"
+    ]
+  },
+  "reportTemplate": {
+    "enabled": true,
+    "format": "markdown",
+    "sections": [
+      "Title",
+      "Executive Summary",
+      "Objective",
+      "Scope",
+      "Current State",
+      "Analysis",
+      "Findings",
+      "Recommendations",
+      "Action Items",
+      "Risks",
+      "Assumptions",
+      "Next Steps"
+    ],
+    "guidance": {
+      "Title": "Use a concise, descriptive title that reflects the request.",
+      "Executive Summary": "Summarize the main outcome in 3-5 sentences.",
+      "Objective": "State the purpose of the report and what it should achieve.",
+      "Scope": "Clarify what is included and excluded.",
+      "Current State": "Describe the present situation, baseline, or context.",
+      "Analysis": "Explain the reasoning, observations, or comparison used.",
+      "Findings": "List the key findings in a clear, factual way.",
+      "Recommendations": "Provide actionable recommendations with priority where useful.",
+      "Action Items": "List concrete follow-up work or decisions.",
+      "Risks": "Call out major risks, blockers, or tradeoffs.",
+      "Assumptions": "Capture explicit assumptions made while drafting the report.",
+      "Next Steps": "Describe the immediate next steps and owners if known."
+    }
+  },
+  "outputFormat": {
+    "type": "markdown",
+    "sections": [
+      "Architecture Overview",
+      "High-Level Design (HLD)",
+      "Low-Level Design (LLD)",
+      "Architecture Diagrams",
+      "Epics",
+      "User Stories (with Story Points)",
+      "Subtasks",
+      "BDD Scenarios",
+      "Test Data",
+      "Tasks",
+      "Dependencies",
+      "Execution Plan",
+      "Risks",
+      "Assumptions",
+      "NFRs",
+      "Estimation Summary"
+    ]
+  },
+  "subtasks": {
+    "enabled": true,
+    "criteria": "For each user story, generate a list of actionable subtasks that are required to complete the story. Subtasks should be implementation-focused and granular enough for engineering teams to estimate and assign. Include a 'Subtasks' section in the markdown output, grouped by user story."
+  },
+  "constraints": {
+    "requireStoryPoints": true,
+    "minSubtasksPerStory": 3,
+    "includeEstimationSummary": true
+  },
+  "inputGuidance": {
+    "projectType": "Use to shape scope (e.g., web app vs. API).",
+    "techStack": "Use to tailor test data, subtasks, and technical tasks to the stack (e.g., Spring Boot, Oracle, React)."
+  },
+  "sectionGuidance": {
+    "Epics": "1-2 epics covering requirement domain.",
+    "User Stories (with Story Points)": "Include persona, goal, value, and point estimate per story.",
+    "Subtasks": "3-7 implementation subtasks per story, grouped by story.",
+    "BDD Scenarios": "At least 3 Gherkin scenarios per story.",
+    "Test Data": "Split into positive/negative/boundary/edge cases with example inputs.",
+    "Tasks": "Cross-cutting tasks that are not story-specific.",
+    "Dependencies": "External systems, teams, or artifacts needed.",
+    "Execution Plan": "Ordered steps from discovery to release.",
+    "Risks": "Concrete risks tied to requirement constraints.",
+    "Assumptions": "Explicit assumptions made from ambiguous requirements.",
+    "NFRs": "Performance, accessibility, security, logging, or compliance constraints.",
+    "Estimation Summary": "Table summarizing story points and totals."
+  },
+  "estimation": {
+    "enabled": true,
+    "method": "storyPoints",
+    "scale": [
+      1,
+      2,
+      3,
+      5,
+      8,
+      13,
+      21
+    ],
+    "criteria": "Estimate story points for each user story based on complexity, effort, and risk. Include a summary table in the markdown output."
+  },
+  "outputNaming": {
+    "convention": "{feature-name}-design-bdd-breakdown.md",
+    "examples": [
+      "tele-service-feature-design-bdd-breakdown.md",
+      "payment-process-design-bdd-breakdown.md",
+      "user-authentication-design-bdd-breakdown.md"
+    ]
+  },
+  "outputBehavior": {
+    "alwaysCreateFile": true,
+    "fileLocation": "docs/generated",
+    "instructions": "Always use the file_operations tool to write the markdown content to a .md file. Extract the feature name from the requirement, convert it to kebab-case, and save it as {feature-name}-design-bdd-breakdown.md. Confirm the created file path to the user after saving."
+  },
+  "sampleOutputTemplatePath": ".github/agents/engineering-design-report-template.md",
+  "agentDocumentationPath": ".github/agents/engineering-design-agent.md",
+  "agentOverviewPath": ".github/agents/engineering-design-agent-overview.md",
+  "validationRules": [
+    "Each user story must have at least 3 subtasks",
+    "Each user story must have a story point estimate",
+    "Each user story must have at least 3 BDD scenarios",
+    "Test data must include positive, negative, and edge cases",
+    "Estimation summary table must be present",
+    "All sections from outputFormat.sections must be included"
+  ],
+  "predefinedPrompts": [
+    "Break down this feature into BDD stories with test data",
+    "Generate a full backlog with BDD scenarios and test data for this requirement: [paste requirement]",
+    "Create epics, user stories, Gherkin scenarios, and test data for [describe feature]",
+    "Produce a markdown document with epics, stories, BDD, test data, subtasks, and NFRs",
+    "Given this requirement, generate positive, negative, and boundary test data with BDD scenarios",
+    "Read the feature hypothesis and break down this feature into BDD stories with points",
+    "Output a professional markdown (.md) document with epics, stories, BDD, test data, and NFRs for this feature",
+    "Generate HLD and LLD architecture design for this feature",
+    "Create architecture diagrams (flowchart, sequence, component) for this requirement",
+    "Produce a full design document with HLD, LLD, and Mermaid diagrams",
+    "Generate end-to-end engineering artifacts: architecture, BDD, test data, and subtasks",
+    "Design the system architecture and break down into stories with estimation",
+    "Generate a generic engineering report template",
+    "Generate a design and BDD breakdown template"
+  ],
+  "interaction": {
+    "enabled": true,
+    "mode": "guided-questions",
+    "trigger": "@engineering-design-agent",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What would you like to generate?",
+        "options": [
+          {
+            "label": "BDD Stories with Test Data",
+            "prompt": "Break down this feature into BDD stories with test data",
+            "description": "Break down feature into BDD stories with test data"
+          },
+          {
+            "label": "Full Backlog & BDD",
+            "prompt": "Generate a full backlog with BDD scenarios and test data for this requirement: [paste requirement]",
+            "description": "Generate full backlog with BDD scenarios and test data"
+          },
+          {
+            "label": "Epics & User Stories",
+            "prompt": "Create epics, user stories, Gherkin scenarios, and test data for [describe feature]",
+            "description": "Create epics, user stories, Gherkin scenarios, and test data"
+          },
+          {
+            "label": "Test Data Focus",
+            "prompt": "Given this requirement, generate positive, negative, and boundary test data with BDD scenarios",
+            "description": "Generate positive, negative, and boundary test data with BDD scenarios"
+          },
+          {
+            "label": "Architecture Design (HLD & LLD)",
+            "prompt": "Generate HLD and LLD architecture design for this feature",
+            "description": "Generate HLD and LLD architecture design"
+          },
+          {
+            "label": "Architecture Diagrams",
+            "prompt": "Create architecture diagrams (flowchart, sequence, component) for this requirement",
+            "description": "Create architecture diagrams (flowchart, sequence, component)"
+          },
+          {
+            "label": "Full Design Document",
+            "prompt": "Produce a full design document with HLD, LLD, and Mermaid diagrams",
+            "description": "Produce full design with HLD, LLD, and Mermaid diagrams"
+          },
+          {
+            "label": "Complete Engineering Artifacts",
+            "prompt": "Generate end-to-end engineering artifacts: architecture, BDD, test data, and subtasks",
+            "description": "Generate end-to-end artifacts: architecture, BDD, test data, and subtasks"
+          },
+          {
+            "label": "Architecture + Estimation",
+            "prompt": "Design the system architecture and break down into stories with estimation",
+            "description": "Design system architecture and break down into stories with estimation"
+          },
+          {
+            "label": "Generic Report Template",
+            "prompt": "Generate a generic engineering report template",
+            "description": "Generate a reusable markdown report template"
+          },
+          {
+            "label": "Design Breakdown Template",
+            "prompt": "Generate a design and BDD breakdown template",
+            "description": "Generate a reusable markdown template for design and BDD artifacts"
+          }
+        ]
+      }
+    ],
+    "helpText": "When you call @engineering-design-agent, I’ll ask you what type of design or breakdown you’d like to generate. Choose from predefined options or provide your own custom request."
+  }
+}

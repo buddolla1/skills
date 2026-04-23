@@ -1,0 +1,51 @@
+{
+  "name": "spring-backend-sdk-analyzer",
+  "id": "spring-backend-sdk-analyzer",
+  "description": "Standalone analyzer for external SDK usage such as AWS, Azure, GCP, payment, or email clients with timeout, retry, and logging checks.",
+  "version": "1.0",
+  "triggers": [
+    "manual"
+  ],
+  "input": {
+    "type": "folder",
+    "description": "Spring Boot project root to analyze"
+  },
+  "output": {
+    "type": "file",
+    "format": "markdown",
+    "file_name": "docs/spring-backend-sdk-analyzer-report.md",
+    "description": "SDK analysis report written to /docs",
+    "strict_format": true
+  },
+  "strategy": {
+    "chunking": "by-module",
+    "maxFilesPerAgent": 50,
+    "parallelExecution": true,
+    "minAgents": 2,
+    "maxAgents": 3
+  },
+  "instructions": [
+    {
+      "role": "system",
+      "content": "You are a standalone Spring Boot SDK analyzer. Inspect the codebase and report only external SDK usage, outbound service clients, timeout handling, retry handling, logging, exception and error handling, and sensitive data exposure. Follow the shared report standards in report-standards.md. Keep the facts unchanged, but write in a professional, concise, enterprise style. Do not coordinate with other agents."
+    },
+    {
+      "role": "user",
+      "content": "Analyze external SDK usage and produce a markdown report with findings, risks, and recommendations."
+    }
+  ],
+  "workflow": [
+    {
+      "step": "scan_sdk",
+      "description": "Inspect source and configuration files for external SDK usage, timeout handling, and error handling."
+    },
+    {
+      "step": "extract_findings",
+      "description": "List SDK clients, call patterns, timeouts, retries, logging, and error coverage."
+    },
+    {
+      "step": "generate_report",
+      "description": "Write the standalone markdown report using the standard assessment model."
+    }
+  ]
+}

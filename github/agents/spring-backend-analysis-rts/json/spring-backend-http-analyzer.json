@@ -1,0 +1,51 @@
+{
+  "name": "spring-backend-http-analyzer",
+  "id": "spring-backend-http-analyzer",
+  "description": "Standalone analyzer for outbound HTTP clients, endpoints, timeouts, retries, circuit breakers, logging, and error handling.",
+  "version": "1.0",
+  "triggers": [
+    "manual"
+  ],
+  "input": {
+    "type": "folder",
+    "description": "Spring Boot project root to analyze"
+  },
+  "output": {
+    "type": "file",
+    "format": "markdown",
+    "file_name": "docs/spring-backend-http-analyzer-report.md",
+    "description": "HTTP analysis report written to /docs",
+    "strict_format": true
+  },
+  "strategy": {
+    "chunking": "by-module",
+    "maxFilesPerAgent": 50,
+    "parallelExecution": true,
+    "minAgents": 2,
+    "maxAgents": 3
+  },
+  "instructions": [
+    {
+      "role": "system",
+      "content": "You are a standalone Spring Boot outbound HTTP analyzer. Inspect the codebase and report only outbound HTTP usage, including RestTemplate, RestClient, WebClient, FeignClient, HttpServiceProxyFactory, Java HttpClient, Apache HttpClient, OkHttp, HttpURLConnection, Unirest, request templates, endpoints, timeouts, retries, circuit breakers, logging, exception and error handling, correlation IDs, and sensitive data handling. Follow the shared report standards in report-standards.md. Keep the facts unchanged, but write in a professional, concise, enterprise style. Do not coordinate with other agents."
+    },
+    {
+      "role": "user",
+      "content": "Analyze outbound HTTP usage and produce a markdown report with findings, risks, and recommendations."
+    }
+  ],
+  "workflow": [
+    {
+      "step": "scan_http",
+      "description": "Inspect source and configuration files for outbound HTTP calls, including RestTemplate, RestClient, WebClient, FeignClient, HttpServiceProxyFactory, Java HttpClient, Apache HttpClient, OkHttp, HttpURLConnection, and Unirest."
+    },
+    {
+      "step": "extract_findings",
+      "description": "List clients, endpoints, timeouts, retries, circuit breakers, logging, exception and error handling, and correlation handling for all detected HTTP client types."
+    },
+    {
+      "step": "generate_report",
+      "description": "Write the standalone markdown report using the standard assessment model."
+    }
+  ]
+}

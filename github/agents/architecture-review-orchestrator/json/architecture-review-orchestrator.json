@@ -1,0 +1,106 @@
+{
+  "name": "architecture-review-orchestrator",
+  "version": "3.1",
+  "type": "orchestrator",
+  "input": {
+    "type": "folder",
+    "description": "Root folder of the project to analyze"
+  },
+  "systemPrompt": "You are a Principal Architect orchestrator. Coordinate specialized agents to perform a six-pillar architecture review, then aggregate the outputs into a single executive-level markdown report with severity scoring, ADRs, and actionable recommendations.",
+  "execution": {
+    "mode": "parallel-then-aggregate"
+  },
+  "agents": [
+    {
+      "name": "structural",
+      "type": "internal",
+      "systemPrompt": "Assess structural integrity: module boundaries, layering, coupling, cohesion, dependency direction, and misuse of abstractions.",
+      "outputs": ["structuralFindings"]
+    },
+    {
+      "name": "domain",
+      "type": "internal",
+      "systemPrompt": "Assess domain modeling quality: entities, value objects, DTO boundaries, naming, invariants, and domain leakage.",
+      "outputs": ["domainFindings"]
+    },
+    {
+      "name": "resilience",
+      "type": "internal",
+      "systemPrompt": "Assess resilience and fault tolerance: exception handling, retries, fallbacks, idempotency, recovery, and safe startup behavior.",
+      "outputs": ["resilienceFindings"]
+    },
+    {
+      "name": "performance",
+      "type": "internal",
+      "systemPrompt": "Assess scalability and performance: hot paths, blocking calls, allocation pressure, query efficiency, caching, and concurrency bottlenecks.",
+      "outputs": ["performanceFindings"]
+    },
+    {
+      "name": "api",
+      "type": "internal",
+      "systemPrompt": "Assess API governance: endpoint design, request/response contracts, validation, status codes, versioning, and surface-area consistency.",
+      "outputs": ["apiFindings"]
+    },
+    {
+      "name": "observability",
+      "type": "internal",
+      "systemPrompt": "Assess observability and operability: logging, metrics, tracing, alertability, diagnosability, configuration, and operational readiness.",
+      "outputs": ["observabilityFindings"]
+    },
+    {
+      "name": "reporter",
+      "type": "internal",
+      "systemPrompt": "Merge findings into an executive architecture report. Deduplicate issues, normalize severity, add ADRs where architectural decisions are implied, and produce clear recommendations.",
+      "format": "markdown",
+      "template": {
+        "Executive Summary": "",
+        "6-Pillar Scorecard": [],
+        "Critical Findings": [],
+        "Architecture Smells": [],
+        "Refactoring Recommendations": [],
+        "C4 Diagrams": [],
+        "Architecture Decision Records (ADRs)": [],
+        "Technical Debt Roadmap": []
+      },
+      "outputs": ["architectureReviewReport"]
+    }
+  ],
+  "workflow": {
+    "type": "parallel",
+    "steps": [
+      {
+        "step": "run-all-agents",
+        "agents": [
+          "structural",
+          "domain",
+          "resilience",
+          "performance",
+          "api",
+          "observability"
+        ]
+      },
+      {
+        "step": "aggregate-results",
+        "action": "merge-findings"
+      },
+      {
+        "step": "generate-final-report",
+        "agent": "reporter"
+      }
+    ]
+  },
+  "output": {
+    "format": "markdown",
+    "file_name": "architecture-review-report.md",
+    "sections": [
+      "Executive Summary",
+      "6-Pillar Scorecard",
+      "Critical Findings",
+      "Architecture Smells",
+      "Refactoring Recommendations",
+      "C4 Diagrams",
+      "Architecture Decision Records (ADRs)",
+      "Technical Debt Roadmap"
+    ]
+  }
+}
