@@ -1,31 +1,55 @@
-# 🧩 Spring Boot Project — Engineering Standards & Best Practices
+# Spring Boot Engineering Standards
 
-Use this file as the short entry point for Spring Boot work in this repository.
-It replaces the previous `.github/instructions/instructions.md` entry point.
-Load the topic files below only when the task needs them.
+Use this file as the entry point for Spring Boot work in this repository. It is the default guidance source; load the topic files below only when the task needs deeper rules.
 
-## Project Context
+## Baseline Context
 
 - Language: Java 21+
 - Framework: Spring Boot 3.x+
 - API style: REST
-- Architecture: layered / clean / hexagonal depending on service needs
+- Architecture: layered, clean, or hexagonal depending on the service
 - Build tool: Maven or Gradle
 
-## Load On Demand
+## When To Load Topic Files
 
-- [architecture-and-coding.md](instructions/topics/architecture-and-coding.md): structure, layering, coding standards, Java style, and anti-patterns
-- [api-and-exceptions.md](instructions/topics/api-and-exceptions.md): REST rules, validation, exception handling, and response contracts
-- [data-access.md](instructions/topics/data-access.md): JPA, JDBC, repositories, and transaction management
-- [quality-and-ops.md](instructions/topics/quality-and-ops.md): security, performance, testing, logging, build, containerization, CI/CD, documentation, and definition of done
+- [architecture-and-coding.md](instructions/topics/architecture-and-coding.md): package structure, layering, Java style, and anti-patterns
+- [api-and-exceptions.md](instructions/topics/api-and-exceptions.md): REST design, validation, exception handling, and response contracts
+- [data-access.md](instructions/topics/data-access.md): JPA, JDBC, repositories, and transaction boundaries
+- [quality-and-ops.md](instructions/topics/quality-and-ops.md): security, testing, logging, performance, build, deployment, and documentation
 
-## Usage Rules
+## Working Rules
 
-- For new code, follow the relevant reference file first.
-- For existing code, preserve local file and module patterns.
-- For large changes, load only the topic files that match the request.
-- Do not load every reference file unless the task is a full repository scan.
+### Existing Code
 
-## Related Overview
+- Preserve local style, naming, structure, and intent.
+- Avoid broad formatting-only changes.
+- Avoid architectural refactoring unless explicitly requested.
+- Preserve behavior, public API contracts, and transaction boundaries.
 
-- [copilot-ecosystem.md](copilot-ecosystem.md): full map of agents, skills, hooks, and flow diagrams.
+### New Code
+
+- Follow this document as the default standard.
+- Match the repository's existing package structure and conventions.
+- Prefer explicit, readable, maintainable code over clever abstractions.
+
+### Conflict Resolution
+
+- Preserved behavior wins over new conventions.
+- Apply new standards only when they do not change behavior or contracts.
+
+## Hard Constraints
+
+- Do not refactor large sections without instruction.
+- Do not introduce breaking architectural changes.
+- Do not change API contracts, transaction semantics, or persistence strategy unless explicitly requested.
+- Do not leak persistence, transport, or internal framework details across boundaries.
+
+## Practical Defaults
+
+- Use constructor injection.
+- Keep controllers focused on HTTP concerns.
+- Keep business logic in services.
+- Keep repositories focused on persistence.
+- Prefer immutable DTOs and value objects where practical.
+- Use clear validation, explicit exceptions, and stable response shapes.
+- Prefer tests and small targeted changes over speculative cleanup.
