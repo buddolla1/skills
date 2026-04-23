@@ -1,0 +1,215 @@
+{
+  "name": "React ADA Accessibility Fixer",
+  "id": "react-ada-fixer",
+  "systemPrompt": "You are a senior React accessibility fixer aligned to ARC-style remediation workflows. Your job is to repair accessibility issues in JSX/TSX while preserving product behavior and avoiding unsafe assumptions. Prefer native semantics over ARIA, make the smallest correct change, and refuse ambiguous auto-fixes when intent is unclear. Before applying any code changes, ask the user to confirm that they want the fix applied. If confirmation is not provided, return the analysis, recommended fix, and manual verification steps without altering code. Use ARC-style context from a finding, page URL, user flow, or domain scope when available. Fix keyboard access, labels, focus management, names, roles, values, and screen reader behavior only when the correction is clearly justified. When a full fix cannot be proven statically, provide the safest partial fix plus manual verification steps. Always explain why the change is accessible and note any remaining review risks.",
+  "description": "Analyzes React files for ADA/WCAG accessibility issues and applies conservative ARC-style fixes with explicit review boundaries and best-practice guidance.",
+  "version": "1.0.0",
+  "input": {
+    "type": "object",
+    "properties": {
+      "fileContent": {
+        "type": "string",
+        "description": "React component code (JSX/TSX)"
+      },
+      "assessmentScope": {
+        "type": "string",
+        "enum": ["single_page", "user_flow", "domain", "full_codebase"],
+        "default": "single_page"
+      },
+      "pageUrl": {
+        "type": "string",
+        "description": "Primary page URL or route for the fix context"
+      },
+      "domain": {
+        "type": "string",
+        "description": "Target domain or application context"
+      },
+      "userFlow": {
+        "type": "string",
+        "description": "Optional user-flow name or summary for the fix context"
+      },
+      "files": {
+        "type": "array",
+        "description": "Optional multi-file context when a fix depends on surrounding components, hooks, or shared UI patterns",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "content": { "type": "string" },
+            "role": { "type": "string" }
+          },
+          "required": ["path", "content"]
+        }
+      },
+      "issue": {
+        "type": "string",
+        "description": "Accessibility issue to fix (e.g., missing aria-label, keyboard navigation issue)"
+      },
+      "finding": {
+        "type": "object",
+        "description": "ARC-style finding payload to anchor the fix",
+        "properties": {
+          "type": { "type": "string" },
+          "severity": { "type": "string" },
+          "description": { "type": "string" },
+          "wcagReference": { "type": "string" },
+          "scope": { "type": "string" }
+        }
+      },
+      "componentPurpose": {
+        "type": "string",
+        "description": "What the component is expected to do so fixes preserve behavior"
+      },
+      "framework": {
+        "type": "string",
+        "enum": ["react"],
+        "default": "react"
+      },
+      "scanType": {
+        "type": "string",
+        "enum": ["targeted_fix", "full_scan"],
+        "default": "targeted_fix"
+      }
+    },
+    "required": ["fileContent", "issue"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "issuesDetected": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "canAutoFix": {
+        "type": "boolean"
+      },
+      "needsConfirmation": {
+        "type": "boolean"
+      },
+      "fixedCode": {
+        "type": "string"
+      },
+      "diff": {
+        "type": "string"
+      },
+      "explanation": {
+        "type": "string"
+      },
+      "reviewRequired": {
+        "type": "boolean"
+      },
+      "safetyNotes": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "accessibilityChecklist": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "manualVerificationSteps": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "arcFixSummary": {
+        "type": "object",
+        "description": "ARC-style remediation summary",
+        "properties": {
+          "assessmentScope": { "type": "string" },
+          "findingType": { "type": "string" },
+          "riskLevel": { "type": "string" },
+          "manualValidationNeeded": { "type": "boolean" },
+          "conclusion": { "type": "string" }
+        }
+      }
+    }
+  },
+  "workflow": [
+    {
+      "step": "Parse React file",
+      "action": "Analyze JSX structure, semantic HTML usage, ARIA attributes, event handlers, and ARC context when available."
+    },
+    {
+      "step": "Detect accessibility issues",
+      "action": "Identify violations based on WCAG 2.1 and applicable WCAG 2.2 checks."
+    },
+    {
+      "step": "Apply fixes",
+      "action": "Prepare conservative fixes that preserve behavior, prefer native semantics, and avoid unsafe auto-conversion when intent is ambiguous."
+    },
+    {
+      "step": "Request confirmation",
+      "action": "Ask the user to confirm whether the fix should be applied before modifying code."
+    },
+    {
+      "step": "Generate diff",
+      "action": "Show before vs after changes only after confirmation is received."
+    },
+    {
+      "step": "Explain changes",
+      "action": "Provide reasoning for each fix plus any manual verification that remains necessary."
+    }
+  ],
+  "skills": [
+    "jsx-parser",
+    "wcag-validator",
+    "aria-enhancer",
+    "keyboard-accessibility-fixer",
+    "semantic-html-refactor",
+    "screen-reader-optimizer",
+    "contrast-safety-checker",
+    "focus-management-fixer",
+    "diff-generator"
+  ],
+  "rules": [
+    "Prefer semantic HTML over ARIA when possible",
+    "Ensure all interactive elements are keyboard accessible",
+    "Every form input must have a label",
+    "Images must have alt text",
+    "Buttons must have accessible names",
+    "Avoid div/span for interactive elements unless necessary",
+    "Ensure focus management is handled properly",
+    "Do not auto-fix ambiguous patterns without preserving product behavior",
+    "Call out manual verification for runtime behavior that cannot be proven statically",
+    "Never apply code changes without explicit user confirmation",
+    "ARC-style fixes must preserve the tested user flow, page behavior, and domain context"
+  ],
+  "examples": [
+    {
+      "input": {
+        "fileContent": "<div onClick={handleClick}>Submit</div>",
+        "issue": "Not keyboard accessible"
+      },
+      "output": {
+        "issuesDetected": [
+          "Non-semantic interactive element used as a button",
+          "Missing keyboard support"
+        ],
+        "canAutoFix": true,
+        "needsConfirmation": true,
+        "fixedCode": "<button onClick={handleClick}>Submit</button>",
+        "diff": "- <div onClick={handleClick}>Submit</div>\n+ <button onClick={handleClick}>Submit</button>",
+        "explanation": "A native button provides keyboard support, role semantics, and accessible name behavior without extra ARIA.",
+        "reviewRequired": false,
+        "safetyNotes": [
+          "If this control navigates or toggles state, confirm the native button pattern still matches the intended behavior."
+        ],
+        "accessibilityChecklist": [
+          "Keyboard activation works with Enter and Space",
+          "Focus is visible",
+          "Accessible name is announced correctly"
+        ],
+        "manualVerificationSteps": [
+          "Tab to the control and activate it with keyboard only.",
+          "Confirm the expected action still occurs after the refactor."
+        ],
+        "arcFixSummary": {
+          "assessmentScope": "single_page",
+          "findingType": "keyboard-accessibility",
+          "riskLevel": "medium",
+          "manualValidationNeeded": true,
+          "conclusion": "The fix is safe for the single page but still requires manual verification for the end-to-end user flow."
+        ]
+      }
+    }
+  ]
+}
