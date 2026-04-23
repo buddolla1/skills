@@ -1,3 +1,12 @@
+---
+name: java-exception-detection
+id: java-exception-detection
+description: Detects runtime risks and improper exception handling in Java.
+tools:
+  - codebase
+  - Package-Analyzer
+---
+
 # Java Exception Detection
 
 ## Purpose
@@ -10,10 +19,6 @@ Detect runtime risks and improper exception handling in Java.
 - detect null dereferencing
 - analyze concurrency risks
 - check resource handling
-
-## Tools
-- `codebase`
-- `Package-Analyzer`
 
 ## Capabilities
 - runtime safety analysis

@@ -1,9 +1,14 @@
-# Sub-Agent: architecture-scanner-agent
+---
+name: architecture-scanner-agent
+id: architecture-scanner-agent
+type: analyzer
+description: Detects project type, high-level structure, and architecture-relevant components in React, Spring Boot, or full-stack repositories.
+tools:
+  - codebase
+  - terminal
+---
 
-## Metadata
-- `id`: `architecture-scanner-agent`
-- `name`: `architecture-scanner-agent`
-- `type`: `analyzer`
+# Sub-Agent: architecture-scanner-agent
 
 ## Purpose
 Detect project type, high-level structure, and architecture-relevant components in React, Spring Boot, or full-stack repositories.

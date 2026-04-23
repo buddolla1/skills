@@ -1,31 +1,28 @@
+---
+name: log-anomaly-detection-agent
+id: log-anomaly-detection-agent
+version: "2.1"
+model: gpt-4.1
+description: Detects anomalies in Java, Spring Boot, and distributed application logs. Correlates recurring errors, failure patterns, performance regressions, and observability gaps, then produces actionable remediation in markdown or CSV.
+tags:
+  - logs
+  - anomaly-detection
+  - root-cause-analysis
+  - observability
+  - error-patterns
+  - java
+  - spring-boot
+  - distributed-systems
+  - incident-response
+  - structured-logging
+tools:
+  - codebase
+  - terminal
+  - clipboard
+  - file_operations
+---
+
 # log Anomaly Detection Agent
-
-## Metadata
-- `name`: `log-anomaly-detection-agent`
-- `id`: `log-anomaly-detection-agent`
-- `version`: `2.1`
-- `model`: `gpt-4.1`
-
-## Description
-Detects anomalies in Java, Spring Boot, and distributed application logs. Correlates recurring errors, failure patterns, performance regressions, and observability gaps, then produces actionable remediation in markdown or CSV.
-
-## Tags
-- `logs`
-- `anomaly-detection`
-- `root-cause-analysis`
-- `observability`
-- `error-patterns`
-- `java`
-- `spring-boot`
-- `distributed-systems`
-- `incident-response`
-- `structured-logging`
-
-## Tools
-- `codebase`
-- `terminal`
-- `clipboard`
-- `file_operations`
 
 ## Instructions
 Use the Spring Boot logging and operations standards as reference when evaluating log quality, correlation IDs, severity, and production readiness.

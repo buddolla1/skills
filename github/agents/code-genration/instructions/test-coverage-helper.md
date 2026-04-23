@@ -1,3 +1,11 @@
+---
+name: test-coverage-helper
+id: test-coverage-helper
+description: Analyzes unit and integration tests and suggests coverage improvements.
+tools:
+  - codebase
+---
+
 # Test Coverage Helper
 
 ## Purpose
@@ -9,9 +17,6 @@ Analyze unit and integration tests and suggest coverage improvements.
 - suggest edge cases
 - recommend JUnit 5 and Mockito best practices
 - suggest Spring Boot test slices
-
-## Tools
-- `codebase`
 
 ## Capabilities
 - coverage gap detection

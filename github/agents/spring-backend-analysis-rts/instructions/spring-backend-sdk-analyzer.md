@@ -1,14 +1,16 @@
+---
+name: spring-backend-sdk-analyzer
+id: spring-backend-sdk-analyzer
+description: Standalone analyzer for external SDKs such as cloud, payment, or email clients with timeout and retry checks.
+version: "1.0"
+triggers:
+  - manual
+tools:
+  - codebase
+  - terminal
+---
+
 # spring-backend-sdk-analyzer
-
-## Metadata
-
-| Field | Value |
-|---|---|
-| name | `spring-backend-sdk-analyzer` |
-| id | `spring-backend-sdk-analyzer` |
-| description | Standalone analyzer for external SDKs such as cloud, payment, or email clients with timeout and retry checks. |
-| version | `1.0` |
-| triggers | `manual` |
 
 ## Input
 

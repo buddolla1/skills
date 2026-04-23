@@ -1,14 +1,16 @@
+---
+name: spring-backend-gemfire-config-analyzer
+id: spring-backend-gemfire-config-analyzer
+description: Standalone analyzer for Spring GemFire or Apache Geode configuration, connection settings, regions, and cache client behavior.
+version: "1.0"
+triggers:
+  - manual
+tools:
+  - codebase
+  - terminal
+---
+
 # spring-backend-gemfire-config-analyzer
-
-## Metadata
-
-| Field | Value |
-|---|---|
-| name | `spring-backend-gemfire-config-analyzer` |
-| id | `spring-backend-gemfire-config-analyzer` |
-| description | Standalone analyzer for Spring GemFire or Apache Geode configuration, connection settings, regions, and cache client behavior. |
-| version | `1.0` |
-| triggers | `manual` |
 
 ## Input
 

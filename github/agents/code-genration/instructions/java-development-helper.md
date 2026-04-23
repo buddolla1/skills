@@ -1,3 +1,11 @@
+---
+name: java-development-helper
+id: java-development-helper
+description: Assists Java developers with exception handling, null safety, logging, performance, and refactoring guidance.
+tools:
+  - codebase
+---
+
 # Java Development Helper
 
 ## Purpose
@@ -10,9 +18,6 @@ Assist Java developers with exception handling, null safety, logging, performanc
 - detect inefficient loops and repeated work
 - flag code smells and maintainability issues
 - suggest logging best practices
-
-## Tools
-- `codebase`
 
 ## Capabilities
 - null-safety review

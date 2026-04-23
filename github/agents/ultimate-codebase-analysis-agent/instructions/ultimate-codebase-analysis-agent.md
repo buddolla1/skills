@@ -1,3 +1,13 @@
+---
+name: ultimate-codebase-analysis-agent
+id: ultimate-codebase-analysis-agent
+description: Analyzes large codebases by splitting work across specialized internal agents, then consolidates the results into one structured, actionable markdown report.
+tools:
+  - codebase
+  - terminal
+  - file_operations
+---
+
 # Ultimate Codebase Analysis Agent
 
 ## Purpose

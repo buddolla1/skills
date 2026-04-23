@@ -1,3 +1,13 @@
+---
+name: engineering-design-agent
+id: engineering-design-agent
+description: Generates repo-aware design docs, BDD stories, test data, architecture design, and Mermaid diagrams in markdown.
+tools:
+  - codebase
+  - terminal
+  - file_operations
+---
+
 # engineering-design-agent
 
 ## Overview

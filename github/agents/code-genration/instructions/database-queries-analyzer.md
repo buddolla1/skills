@@ -1,3 +1,13 @@
+---
+name: database-queries-analyzer
+id: database-queries-analyzer
+description: Analyzes SQL queries and JDBC or Spring Data usage for performance and security.
+tools:
+  - codebase
+  - terminal
+  - sql-linter
+---
+
 # Database Queries Analyzer
 
 ## Purpose
@@ -9,11 +19,6 @@ Analyze SQL queries and JDBC or Spring Data usage for performance and security.
 - identify missing indexes
 - suggest query optimizations
 - recommend JDBC and Spring Data best practices
-
-## Tools
-- `codebase`
-- `terminal`
-- `sql-linter`
 
 ## Capabilities
 - SQL performance analysis

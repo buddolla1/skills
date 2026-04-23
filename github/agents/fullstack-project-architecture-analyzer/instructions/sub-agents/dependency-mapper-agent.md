@@ -1,9 +1,13 @@
-# Sub-Agent: dependency-mapper-agent
+---
+name: dependency-mapper-agent
+id: dependency-mapper-agent
+type: analyzer
+description: Maps component, package, module, and runtime dependencies across React and Spring Boot codebases.
+tools:
+  - codebase
+---
 
-## Metadata
-- `id`: `dependency-mapper-agent`
-- `name`: `dependency-mapper-agent`
-- `type`: `analyzer`
+# Sub-Agent: dependency-mapper-agent
 
 ## Purpose
 Map component, package, module, and runtime dependencies across React and Spring Boot codebases.

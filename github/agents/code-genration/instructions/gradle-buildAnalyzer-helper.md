@@ -1,3 +1,12 @@
+---
+name: gradle-buildAnalyzer-helper
+id: gradle-buildAnalyzer-helper
+description: Analyzes Gradle build scripts for correctness, efficiency, and modern Gradle DSL best practices in Java and Spring Boot projects.
+tools:
+  - codebase
+  - terminal
+---
+
 # Gradle Build Analyzer Helper
 
 ## Purpose
@@ -13,10 +22,6 @@ Use this agent when reviewing:
 - task configuration
 - build performance or caching behavior
 - Gradle DSL modernization opportunities
-
-## Tools
-- `codebase`
-- `terminal`
 
 ## Capabilities
 - Detect unused dependencies

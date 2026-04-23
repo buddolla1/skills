@@ -1,9 +1,13 @@
-# Sub-Agent: process-flow-agent
+---
+name: process-flow-agent
+id: process-flow-agent
+type: analyzer
+description: Extracts user journeys, API flows, backend workflows, and data movement for architecture documentation.
+tools:
+  - codebase
+---
 
-## Metadata
-- `id`: `process-flow-agent`
-- `name`: `process-flow-agent`
-- `type`: `analyzer`
+# Sub-Agent: process-flow-agent
 
 ## Purpose
 Extract user journeys, API flows, backend workflows, and data movement for architecture documentation.

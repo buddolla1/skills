@@ -1,10 +1,16 @@
-# Agent: spring-backend-engineering-suite
+---
+name: spring-backend-engineering-suite
+description: Enterprise backend analysis suite for Spring Boot and Java projects that coordinates reusable skills and parallel sub-agents for compliance, security, exception, performance, egress, and dependency analysis.
+version: "1.0.0"
+schema: v1
+type: orchestrator
+tools:
+  - codebase
+  - terminal
+  - file_operations
+---
 
-## Metadata
-- `name`: `spring-backend-engineering-suite`
-- `version`: `1.0.0`
-- `schema`: `v1`
-- `type`: `orchestrator`
+# Agent: spring-backend-engineering-suite
 
 ## Purpose
 Enterprise backend analysis suite for Spring Boot and Java projects. It uses an orchestrator with reusable skills and parallel sub-agents for compliance, security, exception, performance, egress, and dependency analysis.

@@ -1,10 +1,16 @@
-# Agent: fullstack-project-architecture-orchestrator
+---
+name: fullstack-project-architecture-orchestrator
+id: fullstack-project-architecture-orchestrator
+type: orchestrator
+version: "1.0.0"
+description: Coordinates specialized sub-agents to analyze React, Spring Boot, and full-stack repositories and generate a production-ready architecture document.
+tools:
+  - codebase
+  - terminal
+  - file_operations
+---
 
-## Metadata
-- `name`: `fullstack-project-architecture-orchestrator`
-- `id`: `fullstack-project-architecture-orchestrator`
-- `type`: `orchestrator`
-- `version`: `1.0.0`
+# Agent: fullstack-project-architecture-orchestrator
 
 ## Purpose
 Enterprise-grade architecture orchestrator for React, Spring Boot, and full-stack projects. It uses an agent-of-agents pattern to scan the repository, resolve the project name, map dependencies and process flows, generate Mermaid diagrams, and write the final architecture markdown.

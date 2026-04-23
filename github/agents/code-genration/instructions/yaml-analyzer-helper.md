@@ -1,3 +1,13 @@
+---
+name: yaml-analyzer-helper
+id: yaml-analyzer-helper
+description: Validates and improves YAML configuration files for Spring Boot, Kubernetes, and CI/CD.
+tools:
+  - codebase
+  - terminal
+  - yaml-linter
+---
+
 # YAML Analyzer Helper
 
 ## Purpose
@@ -10,11 +20,6 @@ Validate and improve YAML configuration files for Spring Boot, Kubernetes, and C
 - improve readability
 - review Spring Boot configurations
 - review Kubernetes manifests
-
-## Tools
-- `codebase`
-- `terminal`
-- `yaml-linter`
 
 ## Capabilities
 - YAML syntax validation

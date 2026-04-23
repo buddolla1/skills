@@ -1,9 +1,13 @@
-# Sub-Agent: diagram-generator-agent
+---
+name: diagram-generator-agent
+id: diagram-generator-agent
+type: analyzer
+description: Generates Mermaid diagrams for architecture, components, dependencies, and process flows.
+tools:
+  - codebase
+---
 
-## Metadata
-- `id`: `diagram-generator-agent`
-- `name`: `diagram-generator-agent`
-- `type`: `analyzer`
+# Sub-Agent: diagram-generator-agent
 
 ## Purpose
 Generate Mermaid diagrams for architecture, components, dependencies, and process flows.

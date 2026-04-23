@@ -1,3 +1,11 @@
+---
+name: package-analyzer
+id: package-analyzer
+description: Analyzes all files in a given Java package for structure, dependencies, and risks.
+tools:
+  - codebase
+---
+
 # Package Analyzer
 
 ## Purpose
@@ -8,9 +16,6 @@ Analyze all files in a given Java package for structure, dependencies, and risks
 - map internal dependencies
 - detect structural smells
 - highlight package-level risks
-
-## Tools
-- `codebase`
 
 ## Capabilities
 - package boundary analysis

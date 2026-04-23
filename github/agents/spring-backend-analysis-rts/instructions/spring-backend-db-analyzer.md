@@ -1,14 +1,16 @@
+---
+name: spring-backend-db-analyzer
+id: spring-backend-db-analyzer
+description: Standalone analyzer for database access, repositories, queries, entities, timeouts, and database logging.
+version: "1.0"
+triggers:
+  - manual
+tools:
+  - codebase
+  - terminal
+---
+
 # spring-backend-db-analyzer
-
-## Metadata
-
-| Field | Value |
-|---|---|
-| name | `spring-backend-db-analyzer` |
-| id | `spring-backend-db-analyzer` |
-| description | Standalone analyzer for database access, repositories, queries, entities, timeouts, and database logging. |
-| version | `1.0` |
-| triggers | `manual` |
 
 ## Input
 

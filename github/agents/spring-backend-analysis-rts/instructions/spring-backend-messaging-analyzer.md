@@ -1,14 +1,16 @@
+---
+name: spring-backend-messaging-analyzer
+id: spring-backend-messaging-analyzer
+description: Standalone analyzer for messaging integrations, producers, consumers, retries, timeouts, and messaging logging.
+version: "1.0"
+triggers:
+  - manual
+tools:
+  - codebase
+  - terminal
+---
+
 # spring-backend-messaging-analyzer
-
-## Metadata
-
-| Field | Value |
-|---|---|
-| name | `spring-backend-messaging-analyzer` |
-| id | `spring-backend-messaging-analyzer` |
-| description | Standalone analyzer for messaging integrations, producers, consumers, retries, timeouts, and messaging logging. |
-| version | `1.0` |
-| triggers | `manual` |
 
 ## Input
 

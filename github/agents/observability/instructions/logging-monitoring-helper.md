@@ -1,3 +1,12 @@
+---
+name: logging-monitoring-helper
+id: logging-monitoring-helper
+description: Analyzes logging and observability in Spring Boot applications and recommends production-grade improvements for structured logging, monitoring, correlation, metrics, and tracing.
+tools:
+  - codebase
+  - terminal
+---
+
 # logging monitoring helper
 
 ## Purpose
@@ -13,10 +22,6 @@ Use this agent when reviewing:
 - Micrometer metrics setup
 - tracing integration
 - distributed logging and observability gaps
-
-## Tools
-- `codebase`
-- `terminal`
 
 ## Capabilities
 - Evaluate SLF4J and Logback configuration

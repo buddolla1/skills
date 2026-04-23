@@ -1,3 +1,12 @@
+---
+name: springboot-starter-project
+id: springboot-starter-project
+description: Generates a production-ready Spring Boot Gradle starter project with REST, JDBC, security, testing, and configuration templates.
+tools:
+  - codebase
+  - terminal
+---
+
 # Spring Boot Starter Project
 
 ## Purpose
@@ -12,10 +21,6 @@ Use this agent when you need to scaffold or standardize a new Spring Boot applic
 - JUnit 5 and Mockito testing setup
 - `application.yml` and properties templates
 - standard project documentation
-
-## Tools
-- `codebase`
-- `terminal`
 
 ## Capabilities
 - Detect project structure and choose single-module or multi-module layout

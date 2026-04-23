@@ -1,14 +1,16 @@
+---
+name: spring-backend-logging-analyzer
+id: spring-backend-logging-analyzer
+description: Standalone analyzer for logging around outbound calls, correlation IDs, masking, and exception logging.
+version: "1.0"
+triggers:
+  - manual
+tools:
+  - codebase
+  - terminal
+---
+
 # spring-backend-logging-analyzer
-
-## Metadata
-
-| Field | Value |
-|---|---|
-| name | `spring-backend-logging-analyzer` |
-| id | `spring-backend-logging-analyzer` |
-| description | Standalone analyzer for logging around outbound calls, correlation IDs, masking, and exception logging. |
-| version | `1.0` |
-| triggers | `manual` |
 
 ## Input
 

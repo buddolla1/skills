@@ -1,14 +1,16 @@
+---
+name: spring-backend-http-analyzer
+id: spring-backend-http-analyzer
+description: Standalone analyzer for outbound HTTP clients, REST endpoints, retries, timeouts, and HTTP logging.
+version: "1.0"
+triggers:
+  - manual
+tools:
+  - codebase
+  - terminal
+---
+
 # spring-backend-http-analyzer
-
-## Metadata
-
-| Field | Value |
-|---|---|
-| name | `spring-backend-http-analyzer` |
-| id | `spring-backend-http-analyzer` |
-| description | Standalone analyzer for outbound HTTP clients, REST endpoints, retries, timeouts, and HTTP logging. |
-| version | `1.0` |
-| triggers | `manual` |
 
 ## Input
 

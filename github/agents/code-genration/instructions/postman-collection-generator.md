@@ -1,3 +1,12 @@
+---
+name: postman-collection-generator
+id: postman-collection-generator
+description: Generates a valid Postman Collection v2.1 JSON from Spring Boot REST controllers.
+tools:
+  - codebase
+  - terminal
+---
+
 # Postman Collection Generator
 
 ## Purpose
@@ -10,10 +19,6 @@ Generate a valid Postman Collection v2.1 JSON from Spring Boot REST controllers.
 - detect authentication requirements
 - organize endpoints by controller or namespace
 - produce a valid Postman v2.1 collection artifact
-
-## Tools
-- `codebase`
-- `terminal`
 
 ## Capabilities
 - controller scanning

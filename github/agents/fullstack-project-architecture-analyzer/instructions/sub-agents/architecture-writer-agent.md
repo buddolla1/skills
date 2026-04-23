@@ -1,9 +1,14 @@
-# Sub-Agent: architecture-writer-agent
+---
+name: architecture-writer-agent
+id: architecture-writer-agent
+type: analyzer
+description: Assembles the final architecture document from scanned structure, dependency maps, flows, and diagrams.
+tools:
+  - codebase
+  - file_operations
+---
 
-## Metadata
-- `id`: `architecture-writer-agent`
-- `name`: `architecture-writer-agent`
-- `type`: `analyzer`
+# Sub-Agent: architecture-writer-agent
 
 ## Purpose
 Assemble the final architecture document from scanned structure, dependency maps, flows, and diagrams.

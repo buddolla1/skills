@@ -1,3 +1,12 @@
+---
+name: performance-optimizer-helper
+id: performance-optimizer-helper
+description: Analyzes Java and Spring Boot code for performance bottlenecks and optimization opportunities.
+tools:
+  - codebase
+  - terminal
+---
+
 # performance-optimizer-helper
 
 ## Purpose
@@ -12,10 +21,6 @@ Use this agent when reviewing:
 - caching layers
 - async processing
 - request handlers and hot paths
-
-## Tools
-- `codebase`
-- `terminal`
 
 ## Capabilities
 - Detect inefficient loops and excessive object allocations
